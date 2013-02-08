@@ -19,6 +19,19 @@ other associated information in a MongoDB database, and serve it to the
 front-end as needed via a JSON-based API. With a few exceptions, the code in
 this repository should be written in Java.
 
+Building the Project
+--------------------
+
+1. Install Maven
+    - Install it on Debian with `aptitude install maven`
+    - Install it on Arch with `pacman -S maven`
+    - The Maven wiki has
+      [installation instructions for Windows](https://maven.apache.org/guides/getting-started/windows-prerequisites.html)
+2. Package the application with `mvn package`
+    - You can alternatively run `mvn compile`, which builds only the class files
+      into `bin`
+3. Run the jar with `java -jar dist/routemaster-backend-0.0.1-SNAPSHOT.jar`.
+
 Project Scope
 -------------
 
