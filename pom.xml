@@ -11,7 +11,11 @@
     <artifactId>routemaster-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <url>https://github.com/routemaster/routemaster-backend</url>
-    
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <!-- Tell maven about our directory hierarchy -->
     <build>
         <directory>${basedir}/dist</directory>
