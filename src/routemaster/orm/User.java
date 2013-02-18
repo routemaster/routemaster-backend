@@ -1,6 +1,7 @@
 package routemaster.orm;
 
 import com.mongodb.DBObject;
+import com.mongodb.BasicDBObject;
 import java.util.Date;
 
 public class User implements IDocument {
@@ -51,12 +52,12 @@ public class User implements IDocument {
         return rawExploration;
     }
 
-    public long setRawExploration(long rawExploration) {
+    public void setRawExploration(long rawExploration) {
         this.rawExploration = rawExploration;
     }
 
     public DBObject toDBObject() {
-        return new DBObject().
+        return new BasicDBObject().
             append("name", name).
             append("uid", uid).
             append("registerDate", registerDate).

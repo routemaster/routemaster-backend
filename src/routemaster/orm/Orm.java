@@ -2,13 +2,16 @@ package routemaster.orm;
 
 import com.mongodb.MongoClient;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import java.net.UnknownHostException;
 
 public class Orm {
-    private MongoClient connection = new MongoClient();
-    private DB database = connection.getDB("routemaster");
+    private MongoClient connection;
+    private DB database;
 
-    public Orm() {
-        
+    public Orm() throws UnknownHostException {
+    	connection = new MongoClient();
+    	database = connection.getDB("routemaster");
     }
 
     public DBCollection getUsersCollection() {

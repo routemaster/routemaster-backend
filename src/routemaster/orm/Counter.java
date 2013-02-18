@@ -1,31 +1,30 @@
 package routemaster.orm;
 
 import com.mongodb.DBObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 
 public class Counter {
-    private Collection collection;
+    private DBCollection collection;
     private String name;
 
-    // TODO:
-    // http://docs.mongodb.org/manual/tutorial/create-an-auto-incrementing-field
-
-    public Counter(Collection collection, String name) {
+    public Counter(DBCollection collection, String name) {
         this.collection = collection;
         this.name = name;
     }
 
     public void insert() {
-        collection.insert(new DBObject().
-        	append("_id", name);
+    	if(collection.findOne(new BasicDBObject("_id", name)) != null) return;   	
+    	
+        collection.insert(new BasicDBObject().
+        	append("_id", name).
             append("seq", 0));
     }
     
-    public void getNext() {
+    public int getNext() {
     	return ((Number)collection.findAndModify(
-    		new DBObject().
-    			append("query", new DBObject("_id", name).
-    		    append("update", new DBObject("$inc", new DBObject("seq", 1))).
-    		    append("new", true);
+    			new BasicDBObject("_id", name),
+    		    new BasicDBObject("$inc", new BasicDBObject("seq", 1))
         ).get("seq")).intValue();
     }
 }
