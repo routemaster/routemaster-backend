@@ -21,7 +21,7 @@ public class User implements IDocument {
     // This is for user registration
     public User(String name, Counter counter) {
         this.name = name;
-        uid = counter.incrementAndGet();
+        uid = counter.getNext();
         registerDate = new Date();
         lastLogin = new Date();
         rawExploration = 0l;
