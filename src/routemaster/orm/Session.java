@@ -4,7 +4,7 @@ import com.mongodb.DBObject;
 import com.mongodb.BasicDBObject;
 import java.util.Date;
 
-public Session implements IDocument() {
+public Session implements IDocument {
 	//Timestamp
 	private timestamp;
 	//Long session UUID number

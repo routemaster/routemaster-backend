@@ -5,7 +5,7 @@ import com.mongodb.BasicDBObject;
 import java.util.Date;
 
 //Routes (4 letter names)
-public Route implements IDocument() {
+public Route implements IDocument {
 	//List of waypoints
 	private wypt[];
 	//Start and end timestamps
@@ -62,6 +62,10 @@ public Route implements IDocument() {
 	
 	public addWypt(/*point?*/) {
 		
+	}
+	
+	public setStts(Date d) {
+		stts = d;
 	}
 	
 	public setEdts(Date d){
