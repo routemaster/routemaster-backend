@@ -25,15 +25,15 @@ public Session implements IDocument() {
     	timestamp = new Date();
     }
 	
-	getUuid() {
+	public long getUuid() {
 		return uuid;
 	}
 	
-	getUid() {
+	public int getUid() {
 		return uid;
 	}
 	
-	getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}	
 	
