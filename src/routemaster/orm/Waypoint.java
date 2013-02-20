@@ -10,28 +10,33 @@ public Waypoint implements IDocument {
 	private Date ts;
 	//Geographic position (latitude, longitude, and altitude)
 	//what data type would this be?
-	private lt; //lat
-	private lg; //long
-	private al; //alt
+	private double lt; //lat
+	private double lg; //long
+	private double al; //alt
 	//Measurement accuracy (reported by the user’s device)
-	private float ac;
+	private double ac;
 	//Associated route (using MongoDB ObjectIDs)
-	private rt;
+	private Route rt;
 	//Associated short user id
 	private int ui;
 	
 	public Waypoint(DBObject base) {
         ts = (Date)base.get("ts");
-        lt = ()base.get("lt");
-        lg = ()base.get("lg");
-        al = ()base.get("al");
-        ac = ((Number)base.get("ac")).floatValue();
-        rt = ()base.get("rt");
+        double[] co = new double[2];
+        co = ((Number)base.get("co")).doubleValue();
+        lt = co[0];
+        lg = co[1];
+        al = ((Number)base).get("al").doubleValue();
+        ac = ((Number)base.get("ac")).doubleValue();
+        rt = (Route)base.get("rt");
         ui = ((Number)base.get("ui")).intValue();
 	}
 	
-	public Waypoint(int ui) {
+	public Waypoint(double lt, double lg, double al, int ui) {
         this.ui = ui;
+        this.lt = lt;
+        this.lg = lg;
+        this. al = al;
         ts = new Date();      
 	}
 	
@@ -39,23 +44,23 @@ public Waypoint implements IDocument {
 		return ts;
 	}
 	
-	public __ getLt() {
+	public double getLt() {
 		return lt;
 	}
 	
-	public __ getLg() {
+	public double getLg() {
 		return lg;
 	}
 	
-	public __ getAl() {
+	public double getAl() {
 		return al;
 	}
 	
-	public flaot getAc() {
+	public double getAc() {
 		return ac;
 	}
 	
-	public __ getRt() {
+	public Route getRt() {
 		return rt;
 	}
 	

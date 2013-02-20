@@ -6,33 +6,41 @@ import java.util.Date;
 
 public PopularPath implements IDocument {
 	//Start and end geographic positions (order doesn’t matter)
-	private start;
-	private end;
+	private double[] start;
+	private double[] end;
 	//References to associated routes (using MongoDB ObjectIDs)
 	private Route route;
 	
 	public PopularPath(DBObject base) {
-		
-		
+        double[] start = new double[2];
+        start = ((Number)base.get("start")).doubleValue();
+        double[] end = new double[2];
+        end = ((Number)base.get("end")).doubleValue();
+		route = (Route)base.get("route");
 	}
 	
-	public PopularPath() {
-		
-		
+	public PopularPath(double[] start, double[] end) {
+		this.start = start;
+		this.end = end;
 	}
 	
-	//get
-	//set
+	public double[] getStart(){
+		return start;
+	}
 	
+	public double[] getEnd() {
+		return end;
+	}
+	
+	public Route getRoute() {
+		return route;
+	}
+	//set?	
 	
     public DBObject toDBObject() {
         return new BasicDBObject().
-            append("ts", ts).
-            append("lt", lt).
-            append("lg", lg).
-            append("al", al).
-            append("ac", ac).
-            append("ui", ui).
-            append("rc", rc);
+            append("start", start).
+            append("end", end).
+            append("route", route);
     }
 }
