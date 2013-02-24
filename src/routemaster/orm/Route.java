@@ -5,9 +5,9 @@ import com.mongodb.BasicDBObject;
 import java.util.Date;
 
 //Routes (4 letter names)
-public Route implements IDocument {
+public class Route implements IDocument {
 	//List of waypoints
-	private wypt[];
+	//private Waypoint wypt[];
 	//Start and end timestamps
 	private Date stts;
 	private Date edts;
@@ -19,11 +19,11 @@ public Route implements IDocument {
 	private boolean disq;
 	
 	public Route(DBObject base) {
-        wypt = (/*something? GPSdata?*/)base.get("wypt");
+       // wypt = new Waypoint((DBObject)base.get("wypt"));
         stts = (Date)base.get("stts");
         edts = (Date)base.get("edts");
         uid = ((Number)base.get("uid")).intValue();
-        effs = (Number)base.get("effs").intValue();
+        effs = ((Number)base.get("effs")).intValue();
         disq = (Boolean)base.get("disq");
 	}
 
@@ -35,11 +35,10 @@ public Route implements IDocument {
         disq = false;
 	}
 
-	//not sure of waypoint datatype
-	public getWypt() {
+	/*public Waypoint getWypt() {
 		return wypt;
 	}
-	
+	*/
 	public Date getStts() {
 		return stts;
 	}
@@ -60,29 +59,29 @@ public Route implements IDocument {
 		return disq;
 	}
 	
-	public addWypt(/*point?*/) {
+	/*public void addWypt(Waypoint w) {
 		
 	}
-	
-	public setStts(Date d) {
+	*/
+	public void setStts(Date d) {
 		stts = d;
 	}
 	
-	public setEdts(Date d){
+	public void setEdts(Date d){
 		edts = d;
 	}
 	
-	public int setEffs(int effs) {
+	public void setEffs(int effs) {
 		this.effs = effs;
 	}
 	
-	public boolean setDisq(boolean disq) {
+	public void setDisq(boolean disq) {
 		this.disq = disq;
 	}
 	
     public DBObject toDBObject() {
         return new BasicDBObject().
-            append("wypt", wypt).
+            //append("wypt", wypt).
             append("stts", stts).
             append("edts", edts).
             append("uid", uid).

@@ -5,7 +5,7 @@ import com.mongodb.BasicDBObject;
 import java.util.Date;
 
 //waypoints (2 letter names)
-public Waypoint implements IDocument {
+public class Waypoint implements IDocument {
 	//Timestamp
 	private Date ts;
 	//Geographic position (latitude, longitude, and altitude)
@@ -22,11 +22,13 @@ public Waypoint implements IDocument {
 	
 	public Waypoint(DBObject base) {
         ts = (Date)base.get("ts");
+        /*
         double[] co = new double[2];
         co = ((Number)base.get("co")).doubleValue();
         lt = co[0];
         lg = co[1];
-        al = ((Number)base).get("al").doubleValue();
+        */
+        al = ((Number)base.get("al")).doubleValue();
         ac = ((Number)base.get("ac")).doubleValue();
         rt = (Route)base.get("rt");
         ui = ((Number)base.get("ui")).intValue();
@@ -76,6 +78,6 @@ public Waypoint implements IDocument {
             append("al", al).
             append("ac", ac).
             append("ui", ui).
-            append("rc", rc);
+            append("rt", rt);
     }
 }

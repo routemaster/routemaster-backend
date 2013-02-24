@@ -4,9 +4,9 @@ import com.mongodb.DBObject;
 import com.mongodb.BasicDBObject;
 import java.util.Date;
 
-public Session implements IDocument {
+public class Session implements IDocument {
 	//Timestamp
-	private timestamp;
+	private Date timestamp;
 	//Long session UUID number
 	private long uuid;
 	//Associated short user id
