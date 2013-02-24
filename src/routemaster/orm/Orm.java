@@ -10,8 +10,8 @@ public class Orm {
     private DB database;
 
     public Orm() throws UnknownHostException {
-    	connection = new MongoClient();
-    	database = connection.getDB("routemaster");
+        connection = new MongoClient();
+        database = connection.getDB("routemaster");
     }
 
     public DBCollection getUsersCollection() {
@@ -29,7 +29,7 @@ public class Orm {
     public DBCollection getRoutesCollection() {
         return database.getCollection("routes");
     }
-    
+
     public DBCollection getWaypointsCollection() {
         return database.getCollection("waypoints");
     }

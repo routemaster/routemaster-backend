@@ -14,17 +14,17 @@ public class Counter {
     }
 
     public void insert() {
-    	if(collection.findOne(new BasicDBObject("_id", name)) != null) return;   	
-    	
+        if(collection.findOne(new BasicDBObject("_id", name)) != null) return;
+
         collection.insert(new BasicDBObject().
-        	append("_id", name).
+            append("_id", name).
             append("seq", 0));
     }
-    
+
     public int getNext() {
-    	return ((Number)collection.findAndModify(
-    			new BasicDBObject("_id", name),
-    		    new BasicDBObject("$inc", new BasicDBObject("seq", 1))
+        return ((Number)collection.findAndModify(
+                new BasicDBObject("_id", name),
+                new BasicDBObject("$inc", new BasicDBObject("seq", 1))
         ).get("seq")).intValue();
     }
 }
