@@ -13,7 +13,7 @@ public class Waypoint implements IDocument {
     private double lt; //lat
     private double lg; //long
     private double al; //alt
-    //Measurement accuracy (reported by the user’s device)
+    //Measurement accuracy (reported by the user's device)
     private double ac;
     //Associated route (using MongoDB ObjectIDs)
     private Route rt;
