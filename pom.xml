@@ -21,6 +21,8 @@
         <directory>${basedir}/dist</directory>
         <outputDirectory>${basedir}/bin</outputDirectory>
         <sourceDirectory>${basedir}/src</sourceDirectory>
+        <testSourceDirectory>${basedir}/test</testSourceDirectory>
+        <testOutputDirectory>${basedir}/dist/test</testOutputDirectory>
         <resources>
             <resource>
                 <directory>${basedir}/rsc</directory>
@@ -39,6 +41,15 @@
                             <mainClass>routemaster.Server</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -60,6 +71,12 @@
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

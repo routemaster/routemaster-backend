@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import routemaster.orm;
 
 public class ConvertToJSON {
+    
     public JSONOBject convertUser(User u)
     {
         JSONObject userJSON = new JSONObject();
