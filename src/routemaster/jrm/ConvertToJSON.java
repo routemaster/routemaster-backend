@@ -6,7 +6,8 @@ import routemaster.orm.*;
 
 public class ConvertToJSON {
     
-    public JSONOBject convertUser(User u)
+    //Right now these are all just information dumps. Need more detail on specific queries
+    public JSONObject convertUser(User u)
     {
         JSONObject userJSON = new JSONObject();
         userJSON.put("name", u.getName());
@@ -35,12 +36,12 @@ public class ConvertToJSON {
         routeJSON.put("effs", r.getEffs());
         routeJSON.put("disq", r.getDisq());
     
-        Waypoint[] wypts = r.getWypt();
+        /*Waypoint[] wypts = r.getWypt();
         JSONArray waypoints = new JSONArray();
         //Waypoint array
         for(int i = 0; i < wypts.length; i++)
             waypoints.add(convertWaypoint(wypts[i]));
-        routeJSON.put("wypt", waypoints);
+        routeJSON.put("wypt", waypoints);*/
         
         return routeJSON;
     }
@@ -59,7 +60,7 @@ public class ConvertToJSON {
     public JSONObject convertPopularPath(PopularPath p)
     {
         JSONObject popJSON = new JSONObject();
-        popJSON.put("startlg", p.getStartlg())
+        popJSON.put("startlg", p.getStartlg());
     	popJSON.put("startlt", p.getStartlt());
     	popJSON.put("endlg", p.getEndlg());
     	popJSON.put("endlt", p.getEndlt());
