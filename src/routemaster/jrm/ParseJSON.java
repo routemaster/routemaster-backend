@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import routemaster.orm;
+import routemaster.orm.*;
  
 public class ParseJSON {
 
@@ -18,21 +18,21 @@ public class ParseJSON {
         JSONObject userString = (JSONObject) parser.parse(s);
         //Get data
         String name = (String) userString.get("name");
-        int uid = (int) userString.get("uid");
+        int uid = (Integer) userString.get("uid");
         Date registerDate = (Date) userString.get("regDate");
         Date lastLogin = (Date) userString.get("lastLogin");
-        int rawExplo = (int) userString.get("rawExploration");
+        int rawExplo = (Integer) userString.get("rawExploration");
         //Do Something with the data
-        return new User();
+        return new User(name,  new Counter());
      }
      public Session parseSession(String s)
      {
         JSONParser parser = new JSONParser();
         //Set initial parse
         JSONObject sessionString = (JSONObject) parser.parse(s);
-        //timestamp currently is set on instantiation, so I assume no parse?
+        //time-stamp currently is set on instantiation, so I assume no parse?
         Date timestamp = (Date) sessionString.get("timestamp");
-        int uid = (int) sessionString.get("uid");
+        int uid = (Integer) sessionString.get("uid");
         long uuid = (Long) sessionString.get("uuid");
         //Do Something with the data
         return new Session(uuid, uid);
@@ -46,8 +46,8 @@ public class ParseJSON {
         JSONArray waypoints = (JSONArray) routeString.get("wypt");
         Date startTime = (Date) routeString.get("stts");
         Date endTime = (Date) routeString.get("edts");
-        int uid = (int) routeString.get("uid");
-        int efficiencyScore = (int) routeString.get("effs");
+        int uid = (Integer) routeString.get("uid");
+        int efficiencyScore = (Integer) routeString.get("effs");
         boolean disqualified = (Boolean) routeString.get("disq");
         //Do Something with the data
         return new Route();
@@ -63,7 +63,7 @@ public class ParseJSON {
         double longitude = (Double) waypointString.get("lg");
         double altitude = (Double) waypointString.get("al");
         double accuracy = (Double) waypointString.get("ac");
-        int uid = (int) waypointString.get("ui");
+        int uid = (Integer) waypointString.get("ui");
         //Do something with the data
         return new Waypoint();
      }
@@ -77,7 +77,7 @@ public class ParseJSON {
         double[] st = {(Double)start.get(0), (Double)start.get(1), (Double)start.get(2)};
         JSONArray end = (JSONArray) popularString.get("end");
         double[] ed = {(Double)end.get(0), (Double)end.get(1), (Double)end.get(2)};
-        Route popRoute = parseRoute(popularString.get("route"));
+        Route popRoute = parseRoute((String)popularString.get("route"));
         //Do something with the data
         return new PopularPath();
      }
