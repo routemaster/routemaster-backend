@@ -59,14 +59,10 @@ public class ConvertToJSON {
     public JSONObject convertPopularPath(PopularPath p)
     {
         JSONObject popJSON = new JSONObject();
-        JSONArray start = new JSONArray();
-        for(int i = 0; i < p.getStart().length; i++)
-            start.add(p.getStart()[i]);
-        JSONArray end = new JSONArray();
-        for(int j = 0; j < p.getEnd().length; j++)
-            end.add(p.getEnd()[i]);
-    	popJSON.put("start", start);
-    	popJSON.put("end", end);
+        popJSON.put("startlg", p.getStartlg())
+    	popJSON.put("startlt", p.getStartlt());
+    	popJSON.put("endlg", p.getEndlg());
+    	popJSON.put("endlt", p.getEndlt());
     	popJSON.put("route", convertRoute(p.getRoute()));
        
         return popJSON;

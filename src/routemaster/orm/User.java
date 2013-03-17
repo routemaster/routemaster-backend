@@ -64,4 +64,16 @@ public class User implements IDocument {
             append("lastLogin", lastLogin).
             append("rawExploration", rawExploration);
     }
+    
+    public DBCursor createFromDB(int uid) {
+        BasicDBObject query = new BasicDBObject("uid", uid);
+        try{
+            Orm o = new Orm();
+        }
+        catch(UnknownHostException e)
+            System.exit(1);
+        DBCursor db = o.getUsersCollection().find(query);
+        return db;
+        //return new User(db);
+    }
 }

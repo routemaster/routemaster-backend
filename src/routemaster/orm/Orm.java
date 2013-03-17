@@ -5,7 +5,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import java.net.UnknownHostException;
 
-public class Orm {
+public class Orm{
     private MongoClient connection;
     private DB database;
 

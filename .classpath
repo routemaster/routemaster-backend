@@ -11,5 +11,6 @@
 			<accessrule kind="accessible" pattern="*"/>
 		</accessrules>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Kevin Cold/Downloads/mongo-2.10.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

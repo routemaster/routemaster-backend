@@ -8,6 +8,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import routemaster.orm.*;
+import com.mongodb.*;
  
 public class ParseJSON {
 
@@ -23,7 +24,12 @@ public class ParseJSON {
         Date lastLogin = (Date) userString.get("lastLogin");
         int rawExplo = (Integer) userString.get("rawExploration");
         //Do Something with the data
-        return new User(name,  new Counter());
+        
+     }
+     public User getUserFromDB(int uid)
+     {
+         DBObject dbo = User.createFromDB(uid).next();
+         return new User(dbo);
      }
      public Session parseSession(String s)
      {
@@ -35,7 +41,7 @@ public class ParseJSON {
         int uid = (Integer) sessionString.get("uid");
         long uuid = (Long) sessionString.get("uuid");
         //Do Something with the data
-        return new Session(uuid, uid);
+        
      }
      public Route parseRoute(String s)
      {
@@ -50,7 +56,7 @@ public class ParseJSON {
         int efficiencyScore = (Integer) routeString.get("effs");
         boolean disqualified = (Boolean) routeString.get("disq");
         //Do Something with the data
-        return new Route();
+        
      }
      public Waypoint parseWaypoint(String s, Route r)
      {
@@ -65,7 +71,7 @@ public class ParseJSON {
         double accuracy = (Double) waypointString.get("ac");
         int uid = (Integer) waypointString.get("ui");
         //Do something with the data
-        return new Waypoint();
+        
      }
      public PopularPath parsePopularPaths(String s)
      {
@@ -79,6 +85,6 @@ public class ParseJSON {
         double[] ed = {(Double)end.get(0), (Double)end.get(1), (Double)end.get(2)};
         Route popRoute = parseRoute((String)popularString.get("route"));
         //Do something with the data
-        return new PopularPath();
+        
      }
 }
