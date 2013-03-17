@@ -5,28 +5,33 @@ import org.json.simple.*;
 
 public class RouteFunctions {
 
-    public void AddWaypoint(JSONObject routeinfo)
-    {
+    public void AddWaypoint(JSONObject routeinfo) {
         
     }
-    public void CreateRoute(JSONObject routeinfo)
-    {
+    //Should just need uid
+    public void CreateRoute(JSONObject userinfo) {
         
     }
-    public void GetRoute(JSONObject routeinfo)
-    {
+    public void GetRoute(JSONObject userinfo) {
         
     }
-    public void GetEfficiencyScore(JSONObject routeinfo)
-    {
+    //
+    public void GetEfficiencyScore(JSONObject routeinfo) {
         
     }
-    public void GetExplorationScore(JSONObject routeinfo)
-    {
+    public void GetExplorationScore(JSONObject routeinfo) {
         
     }
-    public void DisqualifyRoute(JSONObject routeinfo)
-    {
+    public void SetEndTime(JSONObject routeinfo) {
+        
+    }
+    public void SetEfficiencyScore(JSONObject routeinfo) {
+        
+    }
+    public void SetExplorationScore(JSONObject routeinfo) {
+        
+    }
+    public void DisqualifyRoute(JSONObject routeinfo) {
         
     }
 }
