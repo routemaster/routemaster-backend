@@ -6,10 +6,6 @@ import com.mongodb.*;
 
 public class RouteFunctions {
 
-    public void AddWaypoint(JSONObject routeinfo) {
-        
-    }
-    //Should just need uid
     public void CreateRoute(JSONObject userinfo) {
         //Uid
     }

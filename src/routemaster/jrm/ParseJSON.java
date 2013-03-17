@@ -10,7 +10,7 @@ import com.mongodb.*;
  
 public class ParseJSON {
 
-     //Keeping the getXFromDB separate. Parse methods to elaborate on later
+     //Keeping the getXFromDB separate. Currently not accounting for nonexistence in db
      public User parseUser(String s)
      {
         JSONParser parser = new JSONParser();
@@ -30,7 +30,9 @@ public class ParseJSON {
         int rawExplo = (Integer) userString.get("rawExploration");
         //Do Something with the data
         
-        return getUserFromDB(uid);        
+        User u = getUserFromDB(uid);
+        if(u != null)
+            return u;
      }
      public User getUserFromDB(int uid)
      {

@@ -4,11 +4,12 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.BasicDBObject;
 import java.util.Date;
+import java.util.ArrayList;
 
 //Routes (4 letter names)
 public class Route implements IDocument {
     //List of waypoints
-    //private Waypoint wypt[];
+    private ArrayList<Waypoint> wypt;
     //Start and end timestamps
     private Date stts;
     private Date edts;
@@ -22,7 +23,7 @@ public class Route implements IDocument {
     private boolean disq;
 
     public Route(DBObject base) {
-        // wypt = new Waypoint((DBObject)base.get("wypt"));
+        UpdateWaypoints((DBObject)base.get("wypt"));
         stts = (Date)base.get("stts");
         edts = (Date)base.get("edts");
         uid = ((Number)base.get("uid")).intValue();
@@ -39,10 +40,12 @@ public class Route implements IDocument {
         disq = false;
     }
 
-    /*public Waypoint getWypt() {
+    private void UpdateWaypoints(DBObject wpt) {
+        //Still not sure what to do here
+    }
+    public ArrayList<Waypoint> getWypt() {
         return wypt;
     }
-    */
     public Date getStts() {
         return stts;
     }
@@ -69,6 +72,7 @@ public class Route implements IDocument {
 
     public void addWypt(Waypoint w) {
         w.setRt(this);
+        wypt.add(w);
     }
     public void setStts(Date d) {
         stts = d;
