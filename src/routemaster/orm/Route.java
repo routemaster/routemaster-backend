@@ -16,6 +16,8 @@ public class Route implements IDocument {
     private int uid;
     //Efficiency score
     private int effs;
+    //Exploration score
+    private int expl;
     //Disqualified flag...if disqualified, set to true
     private boolean disq;
 
@@ -25,6 +27,7 @@ public class Route implements IDocument {
         edts = (Date)base.get("edts");
         uid = ((Number)base.get("uid")).intValue();
         effs = ((Number)base.get("effs")).intValue();
+        expl = ((Number)base.get("expl")).intValue();
         disq = (Boolean)base.get("disq");
     }
 
@@ -55,15 +58,18 @@ public class Route implements IDocument {
     public int getEffs() {
         return effs;
     }
-
+    
+    public int getExpl() {
+        return expl;
+    }
+    
     public boolean getDisq(){
         return disq;
     }
 
-    /*public void addWypt(Waypoint w) {
-
+    public void addWypt(Waypoint w) {
+        w.setRt(this);
     }
-    */
     public void setStts(Date d) {
         stts = d;
     }
@@ -76,6 +82,10 @@ public class Route implements IDocument {
         this.effs = effs;
     }
 
+    public void setExpl(int expl) {
+        this.expl = expl;
+    }
+    
     public void setDisq(boolean disq) {
         this.disq = disq;
     }

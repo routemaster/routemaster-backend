@@ -6,19 +6,17 @@ import com.mongodb.*;
 
 public class UserFunctions {
     
-    /*public void CreateUser(JSONObject userinfo) {
-        
+    //Void for now until functionality is developed
+    public void CreateUser(JSONObject userinfo) {
+        //Name
     }
-    public User GetUserFromDB(JSONObject userinfo) {
-        
-    }
-    public JSONObject GetUserPaths(JSONObject userinfo) {
-        
+    public void GetUserPaths(JSONObject userinfo) {
+        //Uid
     }
     public void UpdateLoginTime(JSONObject userinfo) {
-        
+        //Parameters are uid, date
     }
     public void UpdateExploration(JSONObject userinfo) {
-        
-    }*/
+        //Parameters are uid, increase
+    }
 }

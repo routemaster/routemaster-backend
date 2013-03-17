@@ -6,14 +6,7 @@ import com.mongodb.*;
 
 public class WaypointFunctions {
     
-    public void CreateWaypoint(JSONObject wyptinfo) {
-        
-    }
-    public void UpdateAccuracy(JSONObject wyptinfo) {
-        //wyptinfo should be waypoint specification (uid, coord, acc)
-        
-    }
-    public void AssignRoute(JSONObject wyptinfo, JSONObject routeinfo) {
-        
+    public void CreateWaypoint(JSONObject wyptinfo, JSONObject routeinfo) {
+        //Uid, wypt ts/lat/long/alt, route stts/edts
     }
 }

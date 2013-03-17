@@ -34,11 +34,12 @@ public class Waypoint implements IDocument {
         ui = ((Number)base.get("ui")).intValue();
     }
 
-    public Waypoint(double lt, double lg, double al, int ui) {
+    public Waypoint(double lt, double lg, double al, int ui, double ac) {
         this.ui = ui;
         this.lt = lt;
         this.lg = lg;
         this. al = al;
+        this.ac = ac;
         ts = new Date();
     }
 
@@ -70,6 +71,9 @@ public class Waypoint implements IDocument {
         return ui;
     }
 
+    public void setRt(Route r) {
+        rt = r;
+    }
     public DBObject toDBObject() {
         return new BasicDBObject().
             append("ts", ts).
