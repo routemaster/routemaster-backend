@@ -20,14 +20,14 @@ public class UserFunctions {
     }
     public ArrayList<Route> GetUserPaths(JSONObject userinfo) {
         //Uid
-        User u = parser.parseUser(userinfo);
+        User u = parser.parseUser(userinfo.toString());
         ArrayList<Route> r = new DBFunctions().getAllUserRoutes(u.getUid()); //Array of routes
         return r;
         //Presumably the array list can be later translated back into JSON
     }
     public void UpdateLoginTime(JSONObject userinfo) {
         //Parameters are uid
-        User u = parser.parseUser(userinfo);
+        User u = parser.parseUser(userinfo.toString());
         u.setLastLogin(new Date()); //Assuming it's run immediately
     }
     public void UpdateExploration(JSONObject userinfo) {
