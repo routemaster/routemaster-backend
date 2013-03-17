@@ -11,7 +11,7 @@ public class DBFunctions {
         //There doesn't seem to be anything here...
     }
     //
-    public DBCursor getUserFromDB(int uid) {
+    public DBObject getUserFromDB(int uid) {
         BasicDBObject query = new BasicDBObject("uid", uid); //Query by user id
         DBCursor db = null;
         try{
@@ -21,10 +21,10 @@ public class DBFunctions {
         catch(UnknownHostException e) {
             System.exit(1);
         }
-        return db;
+        return db.next();
     }
     //
-    public DBCursor getRouteFromDB(int uid, Date stts, Date edts) {
+    public DBObject getRouteFromDB(int uid, Date stts, Date edts) {
         BasicDBObject query = new BasicDBObject("uid", uid)
             .append("stts", stts).append("edts", edts); //Query by uid, start time, end time
         DBCursor db = null;
@@ -35,7 +35,7 @@ public class DBFunctions {
         catch(UnknownHostException e) {
             System.exit(1);
         }
-        return db;
+        return db.next();
     }
     public ArrayList<Route> getAllUserRoutes(int uid) {
         BasicDBObject query = new BasicDBObject("uid", uid);
@@ -53,7 +53,7 @@ public class DBFunctions {
         return r;
     }
     //
-    public DBCursor getPPathsFromDB(double startlt, double startlg, double endlt, double endlg) {
+    public DBObject getPPathsFromDB(double startlt, double startlg, double endlt, double endlg) {
         BasicDBObject query = new BasicDBObject("startlt", startlt)
             .append("startlg", startlg).append("endlg", endlg).append("endlt", endlt); //list of ppaths by lat/long
         DBCursor db = null;
@@ -64,10 +64,10 @@ public class DBFunctions {
         catch(UnknownHostException e) {
             System.exit(1);
         }
-        return db;
+        return db.next();
     }
     //
-    public DBCursor getWaypointFromDB(double lat, double lon, double alt) {
+    public DBObject getWaypointFromDB(double lat, double lon, double alt) {
         BasicDBObject query = new BasicDBObject("lt", lat)
             .append("lg", lon).append("al", alt); //Use lat, long, alt to get wypt list
         DBCursor db = null;
@@ -78,7 +78,7 @@ public class DBFunctions {
         catch(UnknownHostException e) {
             System.exit(1);
         }
-        return db;
+        return db.next();
     }
     //
     public Waypoint[] getWaypointsFromRoute(int uid, Date stts, Date edts) {
@@ -91,7 +91,7 @@ public class DBFunctions {
         return wypt;  
     }
     //
-    public DBCursor getSessionFromDB(int uid) {
+    public DBObject getSessionFromDB(int uid) {
         BasicDBObject query = new BasicDBObject("uid", uid); //Query for session info w/ uid
         DBCursor db = null;
         try{
@@ -101,6 +101,6 @@ public class DBFunctions {
         catch(UnknownHostException e) {
             System.exit(1);
         }
-        return db;
+        return db.next();
     }
 }
