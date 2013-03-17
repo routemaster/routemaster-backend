@@ -31,8 +31,7 @@ public class ParseJSON {
         //Do Something with the data
         
         User u = getUserFromDB(uid);
-        if(u != null)
-            return u;
+        return u;
      }
      public User getUserFromDB(int uid)
      {
