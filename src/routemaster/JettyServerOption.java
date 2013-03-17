@@ -20,29 +20,29 @@ public class JettyServerOption extends Server {
     public JettyServerOption(int port) {
         super(port);
 
-        resourceHandler.setDirectoriesListed(false);
-        resourceHandler.setWelcomeFiles(new String[]{
-            "index.html", "demo.html"
-        });
+        //resourceHandler.setDirectoriesListed(false);
+        //resourceHandler.setWelcomeFiles(new String[]{
+        //    "index.html", "demo.html"
+        //});
 
-        // Use the resources packaged into our jarfile
-        resourceHandler.setResourceBase(
-            getClass().getClassLoader().getResource("").toExternalForm());
-        log.info("Configured to Serve " + resourceHandler.getBaseResource());
+        //// Use the resources packaged into our jarfile
+        //resourceHandler.setResourceBase(
+        //    getClass().getClassLoader().getResource("").toExternalForm());
+        //log.info("Configured to Serve " + resourceHandler.getBaseResource());
 
-        HandlerList handlers = new HandlerList();
-        //handlers.setHandlers(new Handler[] {
-        //    resourceHandler, new DefaultHandler() });
-        handlers.setHandlers(new Handler[] {
-            resourceHandler, new MyHandler() });
-        setHandler(handlers);
+        //HandlerList handlers = new HandlerList();
+        ////handlers.setHandlers(new Handler[] {
+        ////    resourceHandler, new DefaultHandler() });
+        //handlers.setHandlers(new Handler[] { new MyHandler() });
+        //setHandler(handlers);
+        setHandler(new MyHandler());
     }
 
     public static void main(String[] args) throws Exception {
         // Configure log4j
-        BasicConfigurator.configure();
-        Logger.getRootLogger().setLevel(Level.WARN); // for everyone else
-        Logger.getLogger("routemaster").setLevel(Level.INFO); // for us
+        //BasicConfigurator.configure();
+        //Logger.getRootLogger().setLevel(Level.WARN); // for everyone else
+        //Logger.getLogger("routemaster").setLevel(Level.INFO); // for us
 
         // Bind to a port and serve pages up as requested
         JettyServerOption server = new JettyServerOption(
