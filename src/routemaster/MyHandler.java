@@ -1,17 +1,11 @@
 package routemaster;
+
 import java.io.IOException;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.Handler;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.Request;
-import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
 
 public class MyHandler extends AbstractHandler {
 
