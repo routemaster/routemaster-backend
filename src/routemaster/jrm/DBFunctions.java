@@ -3,7 +3,7 @@ package routemaster.jrm;
 import routemaster.orm.*;
 import com.mongodb.*;
 import java.net.UnknownHostException;
-import java.util.Date;
+import java.util.*;
 
 public class DBFunctions {
         
@@ -36,6 +36,21 @@ public class DBFunctions {
             System.exit(1);
         }
         return db;
+    }
+    public ArrayList<Route> getAllUserRoutes(int uid) {
+        BasicDBObject query = new BasicDBObject("uid", uid);
+        DBCursor db = null;
+        try{
+            Orm o = new Orm();
+            db = o.getUsersCollection().find(query);
+        }
+        catch(UnknownHostException e) {
+            System.exit(1);
+        }
+        ArrayList<Route> r = new ArrayList<Route>();
+        while(db.hasNext())
+            r.add(new ParseJSON().parseRoute(db.next().toString()));
+        return r;
     }
     //
     public DBCursor getPPathsFromDB(double startlt, double startlg, double endlt, double endlg) {
