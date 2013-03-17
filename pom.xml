@@ -56,7 +56,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>routemaster.JettyServerOption</mainClass>
+                    <mainClass>routemaster.JsonServer</mainClass>
                 </configuration>
             </plugin>
             <plugin>

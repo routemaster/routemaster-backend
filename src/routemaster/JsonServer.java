@@ -9,15 +9,11 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 
-public class JettyServerOption extends Server {
-    private static final Logger log = Logger.getLogger(JettyServerOption.class);
+public class JsonServer extends Server {
+    private static final Logger log = Logger.getLogger(JsonServer.class);
     ResourceHandler resourceHandler = new ResourceHandler();
 
-    public JettyServerOption() {
-        this(8080);
-    }
-
-    public JettyServerOption(int port) {
+    public JsonServer(int port) {
         super(port);
 
         //resourceHandler.setDirectoriesListed(false);
@@ -45,7 +41,7 @@ public class JettyServerOption extends Server {
         //Logger.getLogger("routemaster").setLevel(Level.INFO); // for us
 
         // Bind to a port and serve pages up as requested
-        JettyServerOption server = new JettyServerOption(
+        JsonServer server = new JsonServer(
             args.length == 0 ? 8080 : Integer.parseInt(args[0]));
         server.start();
         server.join();
