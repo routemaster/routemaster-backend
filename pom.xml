@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>routemaster.JettyServerOption</mainClass>
+                            <mainClass>routemaster.JsonServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
