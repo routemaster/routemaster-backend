@@ -6,8 +6,12 @@ import com.mongodb.*;
 
 public class RouteFunctions {
 
+    ParseJSON parser = new ParseJSON();
+    
     public void CreateRoute(JSONObject userinfo) {
         //Uid
+        User u = parser.parseUser(userinfo.toString());
+        u.getUid();        
     }
     //
     public void GetEfficiencyScore(JSONObject routeinfo) {
