@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import java.net.UnknownHostException;
 import routemaster.orm.*;
 import com.mongodb.*;
  
@@ -29,14 +30,17 @@ public class ParseJSON {
         Date lastLogin = (Date) userString.get("lastLogin");
         int rawExplo = (Integer) userString.get("rawExploration");
         //Do Something with the data
-        
-        User u = getUserFromDB(uid);
+        User u = new User(new DBFunctions().getUserFromDB(uid));
+        if(u.getUid() == uid)
+            return u;
+        try{
+        u = new User(name, new Counter(new Orm().getUsersCollection(), name));
         return u;
-     }
-     public User getUserFromDB(int uid)
-     {
-         DBObject dbo = new DBFunctions().getUserFromDB(uid).next();
-         return new User(dbo);
+        }
+        catch(UnknownHostException e) {
+            System.out.println(e);
+        }
+        return null;
      }
      public Session parseSession(String s)
      {
@@ -54,13 +58,7 @@ public class ParseJSON {
         int uid = (Integer) sessionString.get("uid");
         long uuid = (Long) sessionString.get("uuid");
         //Do Something with the data
-        
-        return getSessionFromDB(uid);
-     }
-     public Session getSessionFromDB(int uid)
-     {
-         DBObject dbo = new DBFunctions().getSessionFromDB(uid).next();
-         return new Session(dbo);
+        return new Session(new DBFunctions().getSessionFromDB(uid));
      }
      public Route parseRoute(String s)
      {
@@ -81,13 +79,7 @@ public class ParseJSON {
         int efficiencyScore = (Integer) routeString.get("effs");
         boolean disqualified = (Boolean) routeString.get("disq");
         //Do Something with the data
-        
-        return getRouteFromDB(uid, startTime, endTime);
-     }
-     public Route getRouteFromDB(int uid, Date stts, Date edts)
-     {
-         DBObject dbo = new DBFunctions().getRouteFromDB(uid, stts, edts).next();
-         return new Route(dbo);
+        return new Route(new DBFunctions().getRouteFromDB(uid, startTime, endTime));
      }
      public Waypoint parseWaypoint(String s)
      {
@@ -109,11 +101,7 @@ public class ParseJSON {
         int uid = (Integer) waypointString.get("ui");
         //Do something with the data
         
-        return getWyptFromDB(latitude, longitude, altitude);
-     }
-     public Waypoint getWyptFromDB(double lat, double lon, double alt) {
-         DBObject dbo = new DBFunctions().getWaypointFromDB(lat, lon, alt).next();
-         return new Waypoint(dbo);
+        return new Waypoint(new DBFunctions().getWaypointFromDB(latitude, longitude, altitude));
      }
      public PopularPath parsePopularPaths(String s)
      {
@@ -134,10 +122,6 @@ public class ParseJSON {
         //Route r = popularString.get("route");
         //Do something with the data
         
-        return getPPathsFromDB(stlt, stlg, endlt, endlg);
-     }
-     public PopularPath getPPathsFromDB(double startlat, double startlong, double endlat, double endlong) {
-         DBObject dbo = new DBFunctions().getPPathsFromDB(startlat, startlong, endlat, endlong).next();
-         return new PopularPath(dbo);
+        return new PopularPath(new DBFunctions().getPPathsFromDB(stlt, stlg, endlt, endlg));  
      }
 }
