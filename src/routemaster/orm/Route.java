@@ -21,7 +21,8 @@ public class Route implements IDocument {
     private int expl;
     //Disqualified flag...if disqualified, set to true
     private boolean disq;
-
+	private int rid;
+	
     public Route(DBObject base) {
         UpdateWaypoints((DBObject)base.get("wypt"));
         stts = (Date)base.get("stts");
@@ -30,10 +31,12 @@ public class Route implements IDocument {
         effs = ((Number)base.get("effs")).intValue();
         expl = ((Number)base.get("expl")).intValue();
         disq = (Boolean)base.get("disq");
+		rid = ((Number)base.get("rid")).intvalue();
     }
 
-    public Route(int uid) {
-        this.uid = uid;
+    public Route(int uid, Counter counter) {
+        rid = counter.getNext();
+		this.uid = uid;
         stts = new Date();
         edts = new Date();
         effs = 0;
@@ -101,7 +104,8 @@ public class Route implements IDocument {
             append("edts", edts).
             append("uid", uid).
             append("effs", effs).
-            append("disq", disq);
+            append("disq", disq).
+			append("rid", rid);
     }
 
 }

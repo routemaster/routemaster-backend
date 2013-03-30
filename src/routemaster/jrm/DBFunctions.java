@@ -24,13 +24,12 @@ public class DBFunctions {
         return db;
     }
     //
-    public DBCursor getRouteFromDB(int uid, Date stts, Date edts) {
-        BasicDBObject query = new BasicDBObject("uid", uid)
-            .append("stts", stts).append("edts", edts); //Query by uid, start time, end time
+    public DBCursor getRouteFromDB(int rid) {
+        BasicDBObject query = new BasicDBObject("rid", rid);
         DBCursor db = null;
         try{
             Orm o = new Orm();
-            db = o.getUsersCollection().find(query);
+            db = o.getRoutesCollection().find(query);
         }
         catch(UnknownHostException e) {
             System.exit(1);

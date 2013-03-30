@@ -38,7 +38,7 @@ public class Waypoint implements IDocument {
         this.ui = ui;
         this.lt = lt;
         this.lg = lg;
-        this. al = al;
+        this.al = al;
         this.ac = ac;
         ts = new Date();
     }

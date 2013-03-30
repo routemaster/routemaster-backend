@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class PopularPath implements IDocument {
     //Start and end geographic positions (order doesn't matter)
+	private int ppid;
     private double startlt;
     private double startlg;
     private double endlt;
