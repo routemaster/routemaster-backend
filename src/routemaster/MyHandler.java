@@ -61,9 +61,49 @@ public class MyHandler extends AbstractHandler {
                 String userJSON = ctj.convertUser(user).toString();
                 out.println(userJSON);
             }
-            else if (path.startsWith("leader/")) {
+            else if (path.startsWith("/leader/efficiency")) {
+                //DB leader efficiency code
             }
-            else if (path.startsWith("
+            else if (path.startsWith("/leader/exploration")) {
+                //DB leader exploration code
+            }
+            else if (path.startsWith("/recent/user")) {
+                int userid = Integer.parseInt(path.substring(12));
+                // Get a user from the database
+                DBFunctions dbf = new DBFunctions();
+                DBCursor db = dbf.getAllUserRoutes(userid);
+                DBObject dbobj = db.next();
+                User user = new User(dbobj);
+                ConvertToJSON ctj = new ConvertToJSON();
+                String userJSON = ctj.convertUser(user).toString();
+                out.println(userJSON);
+            }
+            else if (path.startsWith("/popularpath/") {
+                //Not sure what this one does
+            }
+            else if (path.startsWith("/namesuggestions/")  {
+                //Here I use the request.getParameter() tool to fetch the lat an
+                //d long.
+                //e.g. if the URI were namesuggestions/startlatitude=420&startlo
+                //ngitude=420&endlatitude=520&endlongitude=520
+                //Parse the parameters
+                double startlatitude = 
+                    Double.parseDouble(request.getParameter("startlatitude"));
+                double startlongitude = 
+                    Double.parseDouble(request.getParameter("startlongitude"));
+                double endlatitude = 
+                    Double.parseDouble(request.getParameter("endlatitude"));
+                double endlongitude = 
+                    Double.parseDouble(request.getParameter("endlongitude"));
+                // Get the name suggestions
+                DBFunctions dbf = new DBFunctions();
+                DBCursor db = dbf.getPPathsFromDB(startlatitude,
+                    startlongitude,endlatitude,endlongitude);
+                DBObject dbobj = db.next();
+                User user = new User(dbobj);
+                ConvertToJSON ctj = new ConvertToJSON();
+                String userJSON = ctj.convertUser(user).toString();
+                out.println(userJSON);
             else {
                 out.println("Hello y'all! You submitted a request w/ no JSON");
                 out.println("The uri you requested was: " + path);
@@ -72,7 +112,7 @@ public class MyHandler extends AbstractHandler {
         }
         
         //Parse for JSON included requests
-        if (isPUTPOST == true)
+        else if (isPUTPOST == true)
         {
             if (path.startswith("/user/")){
                 
