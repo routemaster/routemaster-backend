@@ -25,6 +25,9 @@ public class MyHandler extends AbstractHandler {
         //here is the best idea...
         boolean isPUTPOST = false;
         try {
+            //if this section returns an error, try 
+            //getInputStream() instead on the request
+            //i.e. br.getInputStream()
             BufferedReader br = hsr.getReader();  <<< Exception
             String jsonString = br.readLine();
             if ((jsonString == null) || jsonString.isEmpty()) {
@@ -71,7 +74,14 @@ public class MyHandler extends AbstractHandler {
         //Parse for JSON included requests
         if (isPUTPOST == true)
         {
-            
+            if (path.startswith("/user/")){
+                
+            }
+            else {
+                out.println("Hello y'all! You submitted a request w/ JSON");
+                out.println("The uri you requested was: " + path);
+                out.println("Try requesting a uri like /user/3");
+            }
         }
     }
 }
