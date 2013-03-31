@@ -71,12 +71,8 @@ public class MyHandler extends AbstractHandler {
                 int userid = Integer.parseInt(path.substring(12));
                 // Get a user from the database
                 DBFunctions dbf = new DBFunctions();
-                DBCursor db = dbf.getAllUserRoutes(userid);
-                DBObject dbobj = db.next();
-                User user = new User(dbobj);
-                ConvertToJSON ctj = new ConvertToJSON();
-                String userJSON = ctj.convertUser(user).toString();
-                out.println(userJSON);
+                ArrayList<Route> r = dbf.getAllUserRoutes(userid);
+                //What to do with this arraylist of routes?
             }
             else if (path.startsWith("/popularpath/") {
                 //Not sure what this one does
@@ -100,10 +96,22 @@ public class MyHandler extends AbstractHandler {
                 DBCursor db = dbf.getPPathsFromDB(startlatitude,
                     startlongitude,endlatitude,endlongitude);
                 DBObject dbobj = db.next();
-                User user = new User(dbobj);
+                PopularPath ppath = new PopularPath(dbobj);
                 ConvertToJSON ctj = new ConvertToJSON();
-                String userJSON = ctj.convertUser(user).toString();
-                out.println(userJSON);
+                String popPathJSON = ctj.convertUser(ppath).toString();
+                out.println(popPathJSON);
+            }
+            else if (path.startsWith("/route/")) {
+                int rid = Integer.parseInt(path.substring(7));
+                // Get a user from the database
+                DBFunctions dbf = new DBFunctions();
+                DBCursor db = dbf.getRouteFromDB(rid);
+                DBObject dbobj = db.next();
+                Route route = new Route(dbobj);
+                ConvertToJSON ctj = new ConvertToJSON();
+                String routeJSON = ctj.convertRoute(route).toString();
+                out.println(routeJSON);
+            }            
             else {
                 out.println("Hello y'all! You submitted a request w/ no JSON");
                 out.println("The uri you requested was: " + path);
