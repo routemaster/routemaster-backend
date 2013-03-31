@@ -20,6 +20,24 @@ public class MyHandler extends AbstractHandler {
         HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
     {
+        //Sachit: Here I attempt to determine if this is a request
+        //with JSON data (PUT or POST). Idk if using a try/catch 
+        //here is the best idea...
+        boolean isPUTPOST = false;
+        try {
+            BufferedReader br = hsr.getReader();  <<< Exception
+            String jsonString = br.readLine();
+            if ((jsonString == null) || jsonString.isEmpty()) {
+                log.error("Request not POST w/ JSON");
+            } 
+            else {
+                log.info("JSON from POST is:" + jsonString);
+                isPUTPOST = true;
+            }
+        } 
+        catch (IOException ex) {
+            log.error(ex.toString());
+        }
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
@@ -38,6 +56,9 @@ public class MyHandler extends AbstractHandler {
             String userJSON = ctj.convertUser(user).toString();
             out.println(userJSON);
         }
+        else if (path.startsWith("leader/")) {
+        }
+        else if (path.startsWith("
         else {
             out.println("Hello y'all!");
             out.println("The uri you requested was: " + path);
