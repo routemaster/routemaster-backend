@@ -44,25 +44,34 @@ public class MyHandler extends AbstractHandler {
         PrintWriter out = response.getWriter();
         HttpURI uri = baseRequest.getUri();
         String path = uri.getDecodedPath();
-        // Parse the URI
-        if (path.startsWith("/user/")) {
-            int userid = Integer.parseInt(path.substring(6));
-            // Get a user from the database
-            DBFunctions dbf = new DBFunctions();
-            DBCursor db = dbf.getUserFromDB(userid);
-            DBObject dbobj = db.next();
-            User user = new User(dbobj);
-            ConvertToJSON ctj = new ConvertToJSON();
-            String userJSON = ctj.convertUser(user).toString();
-            out.println(userJSON);
+        // Parse the URI for no JSON
+        if (isPUTPOST == false)
+        {
+            if (path.startsWith("/user/")) {
+                int userid = Integer.parseInt(path.substring(6));
+                // Get a user from the database
+                DBFunctions dbf = new DBFunctions();
+                DBCursor db = dbf.getUserFromDB(userid);
+                DBObject dbobj = db.next();
+                User user = new User(dbobj);
+                ConvertToJSON ctj = new ConvertToJSON();
+                String userJSON = ctj.convertUser(user).toString();
+                out.println(userJSON);
+            }
+            else if (path.startsWith("leader/")) {
+            }
+            else if (path.startsWith("
+            else {
+                out.println("Hello y'all! You submitted a request w/ no JSON");
+                out.println("The uri you requested was: " + path);
+                out.println("Try requesting a uri like /user/3");
+            }
         }
-        else if (path.startsWith("leader/")) {
-        }
-        else if (path.startsWith("
-        else {
-            out.println("Hello y'all!");
-            out.println("The uri you requested was: " + path);
-            out.println("Try requesting a uri like /user/3");
+        
+        //Parse for JSON included requests
+        if (isPUTPOST == true)
+        {
+            
         }
     }
 }
