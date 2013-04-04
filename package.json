@@ -1,0 +1,20 @@
+{
+    "name": "routemaster",
+    "version": "0.0.1",
+    "description": "Online walking game (server)",
+    "homepage": "https://github.com/routemaster/routemaster-backend",
+    "author": "Benjamin Woodruff <benjaminwoodruff@ufl.edu>",
+    "contributors": [
+        "Colin Chan <colinchan@lumeh.org>"
+    ],
+    "main": "backend.coffee",
+    "dependencies": {
+        "express": ">=3.0.0",
+        "mongodb": ">=1.2.0",
+        "underscore": ">=1.4.0"
+    },
+    "devDependencies": {
+        "coffee-script": ">=1.4.0"
+    },
+    "readmeFilename": "README.md"
+}
