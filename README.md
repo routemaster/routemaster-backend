@@ -17,20 +17,27 @@ Repository Organization
 This is the repository for our back-end. It should store routes, user data, and
 other associated information in a MongoDB database, and serve it to the
 front-end as needed via a JSON-based API. With a few exceptions, the code in
-this repository should be written in Java.
+this repository should be written in Python!!!.
 
 Building the Project
 --------------------
 
-1. Install Maven
-    - Install it on Debian with `aptitude install maven`
-    - Install it on Arch with `pacman -S maven`
-    - The Maven wiki has
-      [installation instructions for Windows](https://maven.apache.org/guides/getting-started/windows-prerequisites.html)
-2. Package the application with `mvn package`
-    - You can alternatively run `mvn compile`, which builds only the class files
-      into `bin`
-3. Run the jar with `java -jar dist/routemaster-backend-0.0.1-SNAPSHOT.jar`.
+1. Install Python 2.7 and virtualenv
+2. Clone the repository
+
+    $ git clone https://github.com/routemaster/routemaster-backend.git
+
+3. Initialize the directory with virtualenv
+
+    $ virtualenv routemaster-backend
+
+4. Install Flask and PyMongo
+
+    $ cd routemaster-backend/
+    $ bin/pip install flask
+    $ bin/pip install pymongo
+
+3. Run the server with `python server.py`
 
 Project Scope
 -------------
