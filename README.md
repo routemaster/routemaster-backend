@@ -25,17 +25,23 @@ Building the Project
 1. Install Python 2.7 and virtualenv
 2. Clone the repository
 
-    $ git clone https://github.com/routemaster/routemaster-backend.git
+```
+$ git clone https://github.com/routemaster/routemaster-backend.git
+```
 
 3. Initialize the directory with virtualenv
 
-    $ virtualenv routemaster-backend
+```
+$ virtualenv routemaster-backend
+```
 
 4. Install Flask and PyMongo
 
-    $ cd routemaster-backend/
-    $ bin/pip install flask
-    $ bin/pip install pymongo
+```
+$ cd routemaster-backend/
+$ bin/pip install flask
+$ bin/pip install pymongo
+```
 
 3. Run the server with `python server.py`
 
