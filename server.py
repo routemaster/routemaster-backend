@@ -4,15 +4,40 @@ from datetime import date, datetime
 
 from bson.json_util import dumps
 from flask import abort, Flask, request
-from pymongo import MongoClient, DESCENDING
+from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
+                        Integer, String)
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
-DB_SERVER = 'localhost'
-DB_NAME = 'routemaster'
-DB_PORT = 27017
-COLLECTIONS = ['popular_paths', 'routes', 'sessions', 'users', 'waypoints']
+engine = create_engine('sqlite:///something')
+Base = declarative_base()
 
-def collection(name):
-    return MongoClient(DB_SERVER, DB_PORT)[DB_NAME][name]
+User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    register_date = Column(Date)
+    last_login_time = Column(DateTime)
+    distance = Column(Integer)
+    exploration = Column(Integer)
+    routes = relationship("Rotue", backref="user")
+
+Route(Base):
+    __tablename__ = 'routes'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    popularpath_id = Column(Integer, ForeignKey('popularpaths.id'))
+    date = Column(Date)
+    start_id = Column(Integer, ForeignKey('waypoints.id'))
+    end_id = Column(Integer, ForeignKey('waypoints.id'))
+    distance = Column(Integer)
+    disqualified = Column(Boolean)
+    efficiency = Column(Integer)
+    time = Column(Integer)
+
+Waypoint(Base):
+    __tablename__ = 'waypoints'
+    id = Column(Integer, primary_key=True)
 
 def next_id(name):
     return collection('counters').findAndModify(query={'_id': name},
