@@ -5,7 +5,7 @@ from datetime import date, datetime
 from bson.json_util import dumps
 from flask import abort, Flask, request
 from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
-                        Integer, String)
+                        Float, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -20,7 +20,8 @@ User(Base):
     last_login_time = Column(DateTime)
     distance = Column(Integer)
     exploration = Column(Integer)
-    routes = relationship("Rotue", backref="user")
+    routes = relationship('Route', backref='user')
+    sessions = relationship('Session', backref='user')
 
 Route(Base):
     __tablename__ = 'routes'
@@ -34,15 +35,31 @@ Route(Base):
     disqualified = Column(Boolean)
     efficiency = Column(Integer)
     time = Column(Integer)
+    waypoints = relationship('Waypoint', backref='route')
 
 Waypoint(Base):
     __tablename__ = 'waypoints'
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    route_id = Column(Integer, ForeignKey('routes.id'))
+    name = Column(String)
+    date = Column(Date)
+    accuracy = Column(Float)
+    latitude = Column(Float)
+    longitude = Column(Float)
 
-def next_id(name):
-    return collection('counters').findAndModify(query={'_id': name},
-                                                update={'$inc': {'seq': 1}},
-                                                new=True)['seq']
+PopularPath(Base):
+    __tablename__ = 'popularpaths'
+    id = Column(Integer, primary_key=True)
+    start_id = Column(Integer, ForeignKey('waypoints.id'))
+    end_id = Column(Integer, ForeignKey('waypoints.id'))
+    routes = relationship('Route', backref='popular_path')
+
+Session(Base):
+    __tablename__ = 'sessions'
+    uuid = Column(String, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    time = Column(DateTime)
 
 def paginate(page, number_per_page=25):
     return {'skip': (page - 1) * 25, 'limit': page * 25}

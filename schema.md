@@ -2,21 +2,21 @@
 
 ## `users`
 
-*   `uid` (integer)
+*   `id` (integer)
 *   `name` (string)
-*   `registerDate` (date)
-*   `lastLoginTime` (datetime)
+*   `register_date` (date)
+*   `last_login_time` (datetime)
 *   `distance` (integer)
 *   `exploration` (integer)
 
 ## `routes`
 
-*   `rid` (integer)
-*   `uid` (integer)
-*   `pid` (integer, optional)
+*   `id` (integer)
+*   `user_id` (integer)
+*   `popularpath_id` (integer, optional)
 *   `date` (date)
-*   `start_wid` (integer)
-*   `end_wid` (integer)
+*   `start_id` (integer)
+*   `end_id` (integer)
 *   `distance` (integer, in meters)
 *   `disqualified` (boolean)
 *   `efficiency` (integer, 0–100)
@@ -24,12 +24,13 @@
 
 ## `waypoints`
 
-*   `wid` (integer)
-*   `uid` (integer)
-*   `rid` (integer)
+*   `id` (integer)
+*   `user_id` (integer)
+*   `route_id` (integer)
 *   `name` (string)
 *   `date` (date)
-*   `position` (pair of floats?)
+*   `latitude` (float)
+*   `longitude` (float)
 *   `accuracy` (integer?)
 
 ## `popularpaths`
