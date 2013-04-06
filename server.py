@@ -2,14 +2,13 @@
 from __future__ import absolute_import, division
 from datetime import date, datetime
 
-from bson.json_util import dumps
 from flask import abort, Flask, request
 from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
                         Float, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-engine = create_engine('sqlite:///something')
+# Define mapping classes for sqlalchemy
 Base = declarative_base()
 
 User(Base):
@@ -64,15 +63,22 @@ Session(Base):
 def paginate(page, number_per_page=25):
     return {'skip': (page - 1) * 25, 'limit': page * 25}
 
+# Open the database using a RELATIVE path (an absolute path really does need
+# four slashes there)
+engine = create_engine('sqlite:///routemaster.db')
+Session = sessionmaker(bind=engine)
+
+# Initialize Flask
 app = Flask(__name__)
 
 @app.route('/')
 def hello():
     return "Hello World!"
 
-@app.route('/user/<int:uid>/', methods=['GET'])
-def get_user(uid):
-    user = collection('users').find_one({'uid': uid})
+@app.route('/user/<int:id>/', methods=['GET'])
+def get_user(id):
+    session = Session()
+    user = session.query(User).filter_by(id=id).first()
     if user:
         return dumps(user)
     else:
