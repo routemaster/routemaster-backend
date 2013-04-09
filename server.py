@@ -49,7 +49,7 @@ def get_user_top(uid, page):
 
 @app.route('/route/<int:rid>/', methods=['GET'])
 def get_route(rid):
-    route = collection('routes').find_one({'rid': rid})
+    route = g.db.query(Route).filter_by(id=rid).first()
     if route:
         return dumps(route)
     else:
@@ -57,7 +57,7 @@ def get_route(rid):
 
 @app.route('/waypoint/<int:wid>/', methods=['GET'])
 def get_waypoint(wid):
-    waypoint = collection('waypoints').find_one({'wid': wid})
+    waypoint = g.db.query(Waypoint).filter_by(id=wid).first()
     if waypoint:
         return dumps(waypoint)
     else:
@@ -70,19 +70,20 @@ def get_nearby_waypoints(coordinates):
     return "This doesn't work yet."
 
 @app.route('/popularpath/<int:wid>/', methods=['GET'])
-def get_popularpath(wid):
-    popularpath = collection('popularpaths').find_one({'wid': wid})
+def get_popularpath(pid):
+    popularpath = g.db.query(PopularPath).filter_by(id=pid).first()
     if popularpath:
         return dumps(popularpath)
     else:
         abort(404)
 
 @app.route('/popularpath/<int:pid>/top/<int:page>/', methods=['GET'])
-def get_popularpath_top_routes(pid, page):
-    routes = collection('routes').find({'pid': pid},
-                                       sort=[('efficiency', DESCENDING)],
-                                       **paginate(page))
-    return dumps(routes)
+def get_popularpath_top_routes(pid):
+    routes = g.db.query(Route).filter_by(id=pid).first()
+    if routes:
+        return dumps(routes)
+    else:
+        abort(404)
 
 @app.route('/leaders/efficiency/<int:page>/', methods=['GET'])
 def get_top_efficiency(page):
