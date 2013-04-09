@@ -14,13 +14,6 @@ app = Flask(__name__)
 def before_request():
     g.db = SQLAlchemySession()
 
-@app.teardown_request
-def teardown_request(exception):
-    if exception is None:
-        g.db.commit()
-    else:
-        g.db.rollback()
-
 @app.route('/')
 def hello():
     return "Hello World!"
@@ -99,44 +92,28 @@ def get_top_exploration(page):
 
 @app.route('/user/', methods=['POST'])
 def create_user():
-    user = {'uid': next_id('users'),
-            'name': request.form['name'],
-            'registerDate': date.today(),
-            'lastLoginTime': datetime.now(),
-            'distance': 0,
-            'exploration': 0}
-    uid = collection('users').insert(user)
-    return "Created user with id {}".format(uid)
+    user = User(**request.form)
+    g.db.add(user)
+    g.db.commit()
+    return "Created user with id {}".format(user.id)
 
 @app.route('/route/', methods=['POST'])
 def create_route():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    route = {'rid': next_id('routes'),
-             'uid': request.form['uid'],
-             'pid': None,
-             'date': request.form['date'],
-             'start_wid': request.form['start_wid'],
-             'end_wid': request.form['end_wid'],
-             'disqualified': request.form['disqualified'],
-             'distance': request.form['distance'],
-             'efficiency': request.form['efficiency']}
-    rid = collection('users').insert(user)
-    return "Created route with id {}".format(rid)
+    route = Route(**request.form)
+    g.db.add(route)
+    g.db.commit()
+    return "Created route with id {}".format(route.id)
 
 @app.route('/waypoint/', methods=['POST'])
 def create_waypoint():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    waypoint = {'wid': next_id('waypoints'),
-                'uid': request.form['uid'],
-                'rid': request.form['rid'],
-                'name': request.form['name'],
-                'time': request.form['time'],
-                'position': request.form['position'],
-                'accuracy': request.form['accuracy']}
-    wid = collection('waypoints').insert(waypoint)
-    return "Created route with id {}".format(wid)
+    waypoint = Waypoint(**request.form)
+    g.db.add(waypoint)
+    g.db.commit()
+    return "Created waypoint with id {}".format(waypoint.id)
 
 if __name__ == '__main__':
     # Set up counters

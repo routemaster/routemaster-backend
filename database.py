@@ -29,7 +29,6 @@ class Route(Base):
     disqualified = Column(Boolean)
     efficiency = Column(Integer)
     time = Column(Integer)
-    waypoints = relationship('Waypoint', backref='route')
 
 class Waypoint(Base):
     __tablename__ = 'waypoints'
@@ -41,6 +40,7 @@ class Waypoint(Base):
     accuracy = Column(Float)
     latitude = Column(Float)
     longitude = Column(Float)
+    route = relationship('Route', backref='waypoints', foreign_keys=[route_id])
 
 class PopularPath(Base):
     __tablename__ = 'popularpaths'
