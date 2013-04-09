@@ -3,73 +3,23 @@ from __future__ import absolute_import, division
 from datetime import date, datetime
 
 from flask import abort, Flask, request
-from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
-                        Float, Integer, String)
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
-# Define mapping classes for sqlalchemy
-Base = declarative_base()
-
-User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    register_date = Column(Date)
-    last_login_time = Column(DateTime)
-    distance = Column(Integer)
-    exploration = Column(Integer)
-    routes = relationship('Route', backref='user')
-    sessions = relationship('Session', backref='user')
-
-Route(Base):
-    __tablename__ = 'routes'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    popularpath_id = Column(Integer, ForeignKey('popularpaths.id'))
-    date = Column(Date)
-    start_id = Column(Integer, ForeignKey('waypoints.id'))
-    end_id = Column(Integer, ForeignKey('waypoints.id'))
-    distance = Column(Integer)
-    disqualified = Column(Boolean)
-    efficiency = Column(Integer)
-    time = Column(Integer)
-    waypoints = relationship('Waypoint', backref='route')
-
-Waypoint(Base):
-    __tablename__ = 'waypoints'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    route_id = Column(Integer, ForeignKey('routes.id'))
-    name = Column(String)
-    date = Column(Date)
-    accuracy = Column(Float)
-    latitude = Column(Float)
-    longitude = Column(Float)
-
-PopularPath(Base):
-    __tablename__ = 'popularpaths'
-    id = Column(Integer, primary_key=True)
-    start_id = Column(Integer, ForeignKey('waypoints.id'))
-    end_id = Column(Integer, ForeignKey('waypoints.id'))
-    routes = relationship('Route', backref='popular_path')
-
-Session(Base):
-    __tablename__ = 'sessions'
-    uuid = Column(String, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    time = Column(DateTime)
-
-def paginate(page, number_per_page=25):
-    return {'skip': (page - 1) * 25, 'limit': page * 25}
-
-# Open the database using a RELATIVE path (an absolute path really does need
-# four slashes there)
-engine = create_engine('sqlite:///routemaster.db')
-Session = sessionmaker(bind=engine)
+from .database import (PopularPath, Route, Session, SQLAlchemySession, User,
+                       Waypoint)
 
 # Initialize Flask
 app = Flask(__name__)
+
+@app.before_request
+def before_request():
+    g.db = SQLAlchemySession()
+
+@app.teardown_request
+def teardown_request(exception):
+    if exception is None:
+        g.db.commit()
+    else:
+        g.db.rollback()
 
 @app.route('/')
 def hello():
@@ -77,8 +27,7 @@ def hello():
 
 @app.route('/user/<int:id>/', methods=['GET'])
 def get_user(id):
-    session = Session()
-    user = session.query(User).filter_by(id=id).first()
+    user = g.db.query(User).filter_by(id=id).first()
     if user:
         return dumps(user)
     else:
