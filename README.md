@@ -33,12 +33,10 @@ This isn't going to work well on Windows...
 
     $ virtualenv routemaster-backend
 
-4. Install Flask, PyMongo, and SQLAlchemy
+4. Install the needed packages
 
     $ cd routemaster-backend/
-    $ bin/pip install flask
-    $ bin/pip install pymongo
-    $ bin/pip install sqlalchemy
+    $ bin/pip install -r requirements.txt
 
 3. Run the server with `python server.py`
 
