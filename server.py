@@ -4,8 +4,8 @@ from datetime import date, datetime
 
 from flask import abort, Flask, request
 
-from .database import (PopularPath, Route, Session, SQLAlchemySession, User,
-                       Waypoint)
+from database import (PopularPath, Route, Session,
+                      SQLAlchemySession, User, Waypoint)
 
 # Initialize Flask
 app = Flask(__name__)
