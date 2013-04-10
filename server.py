@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division
 from datetime import date, datetime
 
-from flask import abort, Flask, request
+from flask import abort, Flask, g, request
 
 from database import (PopularPath, Route, Session,
                       SQLAlchemySession, User, Waypoint)
