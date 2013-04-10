@@ -1,15 +1,26 @@
 #!/usr/bin/python2
 from __future__ import absolute_import, division
 from datetime import date, datetime
-import sys
+import json
+import os.path
+from time import mktime
 
 from flask import abort, Flask, g, request
 
-from database import (Base, engine, PopularPath, Route, Session,
-                      SQLAlchemySession, User, Waypoint)
+from database import (PopularPath, Route, Session, SQLAlchemySession, User,
+                      Waypoint)
 
 def paginate(query, page):
     return query.offset(page*30).limit(30)
+
+def to_json(obj):
+    data = {}
+    for column in obj.__table__.columns:
+        value = getattr(obj, column.name)
+        if isinstance(value, (date, datetime)):
+            value = mktime(value.timetuple())
+        data[column.name] = value
+    return json.dumps(data)
 
 # Initialize Flask
 app = Flask(__name__)
@@ -41,6 +52,12 @@ def get_user_top_routes(uid, page):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.efficiency)
     routes = paginate(query, page).all()
     return to_json(routes)
+
+@app.route('/user/<int:uid>/friends/')
+def get_user_friends(uid):
+    # TODO: add friend relationships to db
+    friends = "uhh....."
+    return to_json(friends)
 
 @app.route('/route/<int:rid>/')
 def get_route(rid):
@@ -117,11 +134,4 @@ def create_waypoint():
     return "Created waypoint with id {}".format(waypoint.id)
 
 if __name__ == '__main__':
-    try:
-        arg = sys.argv[1]
-    except IndexError:
-        pass
-    else:
-        if arg == '--initialize':
-            Base.metadata.create_all(engine)
     app.run(host='0.0.0.0', port=8000, debug=True)

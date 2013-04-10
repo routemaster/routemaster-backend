@@ -1,10 +1,13 @@
 from datetime import date, datetime
+import os.path
 from uuid import uuid4
 
 from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
                         Float, ForeignKey, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+
+DATABASE = 'routemaster.db'
 
 # Define mapping classes for sqlalchemy
 Base = declarative_base()
@@ -37,13 +40,13 @@ class Waypoint(Base):
     __tablename__ = 'waypoints'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    route_id = Column(Integer, ForeignKey('routes.id'))
+    route_id = Column(Integer, ForeignKey('waypoint.route_id', 'routes.id',
+                                          use_alter=True))
     name = Column(String)
     date = Column(Date)
     accuracy = Column(Float)
     latitude = Column(Float)
     longitude = Column(Float)
-    route = relationship('Route', backref='waypoints', foreign_keys=[route_id])
 
 class PopularPath(Base):
     __tablename__ = 'popularpaths'
@@ -60,5 +63,11 @@ class Session(Base):
 
 # Open the database using a RELATIVE path (an absolute path really does need
 # four slashes there)
-engine = create_engine('sqlite:///routemaster.db')
+engine = create_engine('sqlite:///{}'.format(DATABASE))
 SQLAlchemySession = sessionmaker(bind=engine)
+
+# Initialize the database if it doesn't exist yet
+if not os.path.exists(DATABASE):
+    print "Creating sqlite database '{}'...".format(DATABASE)
+    Base.metadata.create_all(engine)
+    print "Done."
