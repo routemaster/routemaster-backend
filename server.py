@@ -117,11 +117,15 @@ def create_waypoint():
     return "Created waypoint with id {}".format(waypoint.id)
 
 if __name__ == '__main__':
-    try:
-        arg = sys.argv[1]
-    except IndexError:
-        pass
-    else:
-        if arg == '--initialize':
-            Base.metadata.create_all(engine)
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="API and database server for RouteMaster",
+        epilog="Issues should be submitted via github: "
+               "<https://github.com/routemaster/routemaster-backend/issues>."
+    )
+    parser.add_argument("-i", "--initialize", action="store_true",
+                        help="Performs the initial database configuration.")
+    args = parser.parse_args()
+    if args.initialize:
+        Base.metadata.create_all(engine)
     app.run(host='0.0.0.0', port=8000, debug=True)
