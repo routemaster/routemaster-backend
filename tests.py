@@ -20,5 +20,7 @@ class RoutemasterTestCase(unittest.TestCase):
         assert 'Colin Chan' in r2.text
 
 if __name__ == '__main__':
-    print "Remember, the server has to be running for this to work!"
-    unittest.main()
+    results = unittest.main(exit=False).result
+    if len(results.errors) == results.testsRun:
+        print "Every single test failed. Good job."
+        print "Did you forget to run the server before running the tests?"

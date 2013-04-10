@@ -1,3 +1,6 @@
+from datetime import date, datetime
+from uuid import uuid4
+
 from sqlalchemy import (Boolean, Column, create_engine, Date, DateTime,
                         Float, ForeignKey, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
@@ -10,10 +13,10 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    register_date = Column(Date)
-    last_login_time = Column(DateTime)
-    distance = Column(Integer)
-    exploration = Column(Integer)
+    register_date = Column(Date, default=date.today)
+    last_login_time = Column(DateTime, default=datetime.now)
+    distance = Column(Integer, default=0)
+    exploration = Column(Integer, default=0)
     routes = relationship('Route', backref='user')
     sessions = relationship('Session', backref='user')
 
@@ -51,9 +54,9 @@ class PopularPath(Base):
 
 class Session(Base):
     __tablename__ = 'sessions'
-    uuid = Column(String, primary_key=True)
+    uuid = Column(String, primary_key=True, default=uuid4)
     user_id = Column(Integer, ForeignKey('users.id'))
-    time = Column(DateTime)
+    time = Column(DateTime, default=datetime.now)
 
 # Open the database using a RELATIVE path (an absolute path really does need
 # four slashes there)
