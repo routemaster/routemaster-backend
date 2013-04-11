@@ -16,26 +16,35 @@ class RoutemasterTestCase(unittest.TestCase):
         r = requests.post(SERVER+'/user/', data=colin)
         assert r.status_code == 200
         user = r.json()
+        assert user['name'] == 'Colin Chan'
         r2 = requests.get(SERVER+'/user/{}/'.format(user['id']))
+        assert r2.status_code == 200
         assert 'Colin Chan' in r2.text
-   
+
     def test_put_route(self):
-        walk = {'date': date.today(), 'distance': 100, 'disqualified': False, 'efficiency': 5, 'time': datetime.now()}
-        r = requests.post(SERVER+'/route/', data=walk)
+        route = {'date': date.today(), 'distance': 100, 'disqualified': False,
+                'efficiency': 50, 'time': 305}
+        r = requests.post(SERVER+'/route/', data=route)
         assert r.status_code == 200
         testRoute = r.json()
+        assert testRoute['distance'] == 100
+        assert testRoute['efficiency'] == 50
         r2 = requests.get(SERVER+'/route/{}/'.format(testRoute['id']))
-        dist = 100
-        assert dist in r2.text
+        assert r2.status_code == 200
+        assert '305' in r2.text
 
     def test_put_waypoint(self):
-        point = {'name': 'newPoint', 'date': date.today(), 'accuracy': '4.3', 'latitude': '50.23', 'longitude': '23.45'}
+        point = {'name': 'newPoint', 'date': date.today(), 'accuracy': 43,
+                 'latitude': 50.23, 'longitude': 23.45}
         r = requests.post(SERVER+'/waypoint/', data=point)
         assert r.status_code == 200
         testPoint = r.json()
-	r2 = requests.get(SERVER+'/waypoint/{}/'.format(testPoint['id']))
-	acc = 4.3
-	assert acc in r2.text
+        assert testPoint['name'] == 'newPoint'
+        assert testPoint['latitude'] == 50.23
+        r2 = requests.get(SERVER+'/waypoint/{}/'.format(testPoint['id']))
+        assert r2.status_code == 200
+        assert 4.3 in r2.text
+        assert 'newPoint' in r2.text
 
 if __name__ == '__main__':
     results = unittest.main(exit=False).result
