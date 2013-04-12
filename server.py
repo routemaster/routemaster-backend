@@ -5,6 +5,7 @@ import json
 import os.path
 from time import mktime
 
+from dateutil.parser import parse as parse_date
 from flask import abort, Flask, g, request
 
 from database import (PopularPath, Route, Session, SQLAlchemySession, User,
@@ -119,19 +120,28 @@ def create_user():
 def create_route():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    route = Route(**request.form)
+    f = request.form
+    route = Route(user_id=f['user_id'], date=parse_date(f['date']),
+                  distance=f['distance'], disqualified=f['disqualified'],
+                  efficiency=f['efficiency'], time=f['time'])
+    if 'popularpath_id' in f:
+        route.popularpath_id = f['popularpath_id']
     g.db.add(route)
     g.db.commit()
-    return "Created route with id {}".format(route.id)
+    return to_json(route)
 
 @app.route('/waypoint/', methods=['POST'])
 def create_waypoint():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    waypoint = Waypoint(**request.form)
+    f = request.form
+    waypoint = Waypoint(user_id=f['user_id'], route_id=f['route_id'],
+                        name=f['name'], date=parse_date(f['date']),
+                        accuracy=f['accuracy'], latitude=f['latitude'],
+                        longitude=f['longitude'])
     g.db.add(waypoint)
     g.db.commit()
-    return "Created waypoint with id {}".format(waypoint.id)
+    return to_json(waypoint)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

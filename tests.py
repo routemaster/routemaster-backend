@@ -11,40 +11,54 @@ class RoutemasterTestCase(unittest.TestCase):
         r = requests.get(SERVER+'/')
         assert r.text == 'Hello World!'
 
-    def test_put_user(self):
-        colin = {'name': 'Colin Chan', 'register_date': date.today()}
+    def test_add_user(self):
+        # We're going to add a user to the database!
+        colin = {'name': 'Colin Chan'}
+        # Send the request to the server and save the response
         r = requests.post(SERVER+'/user/', data=colin)
+        # Check that we get the correct status code (200 means Success)
         assert r.status_code == 200
+        # Convert the response json into a dictionary
         user = r.json()
+        # Make sure this conversion worked and has the right data
         assert user['name'] == 'Colin Chan'
+        # Request our new user by id from the server
         r2 = requests.get(SERVER+'/user/{}/'.format(user['id']))
+        # Check that the request was successful and has the right data
         assert r2.status_code == 200
         assert 'Colin Chan' in r2.text
 
-    def test_put_route(self):
-        route = {'date': date.today(), 'distance': 100, 'disqualified': False,
-                'efficiency': 50, 'time': 305}
+    def test_add_route_and_waypoints(self):
+        # We need a valid user id to add a route
+        colin = {'name': 'Colin Chan'}
+        colin_id = requests.post(SERVER+'/user/', data=colin).json()['id']
+        # Add a route
+        route = {'user_id': colin_id, 'date': date.today().isoformat(),
+                 'distance': 100, 'disqualified': 0, 'efficiency': 50,
+                 'time': 305}
         r = requests.post(SERVER+'/route/', data=route)
         assert r.status_code == 200
-        testRoute = r.json()
-        assert testRoute['distance'] == 100
-        assert testRoute['efficiency'] == 50
-        r2 = requests.get(SERVER+'/route/{}/'.format(testRoute['id']))
-        assert r2.status_code == 200
-        assert '305' in r2.text
-
-    def test_put_waypoint(self):
-        point = {'name': 'newPoint', 'date': date.today(), 'accuracy': 43,
-                 'latitude': 50.23, 'longitude': 23.45}
+        # Do some spot checks to make sure the server returns the right stuff
+        route = r.json()
+        assert route['distance'] == 100
+        assert route['efficiency'] == 50
+        r = requests.get(SERVER+'/route/{}/'.format(route['id']))
+        assert r.status_code == 200
+        assert '305' in r.text
+        # Next, add a waypoint
+        point = {'name': 'newPoint', 'date': date.today().isoformat(),
+                 'accuracy': 43, 'latitude': 50.23, 'longitude': 23.45,
+                 'user_id': colin_id, 'route_id': route['id']}
         r = requests.post(SERVER+'/waypoint/', data=point)
         assert r.status_code == 200
-        testPoint = r.json()
-        assert testPoint['name'] == 'newPoint'
-        assert testPoint['latitude'] == 50.23
-        r2 = requests.get(SERVER+'/waypoint/{}/'.format(testPoint['id']))
-        assert r2.status_code == 200
-        assert 4.3 in r2.text
-        assert 'newPoint' in r2.text
+        # More spot checks
+        point = r.json()
+        assert point['name'] == 'newPoint'
+        assert point['latitude'] == 50.23
+        r = requests.get(SERVER+'/waypoint/{}/'.format(point['id']))
+        assert r.status_code == 200
+        assert '43' in r.text
+        assert 'newPoint' in r.text
 
 if __name__ == '__main__':
     results = unittest.main(exit=False).result
