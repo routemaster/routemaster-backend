@@ -1,4 +1,21 @@
+# Some ideas are stolen from
+# https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Virtualenv
 bin
 include
 lib
+lib64
+local
+
+# Pip
+pip-log.txt
+*.egg
+*.egg-info
+
+# Caching
+__pycache__
+*.py[cod]
+
+# Database
 routemaster.db
