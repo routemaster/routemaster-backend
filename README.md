@@ -22,28 +22,30 @@ this repository should be written in Python!!!.
 Building the Project
 --------------------
 
+This isn't going to work well on Windows...
+
 1. Install Python 2.7 and virtualenv
+
 2. Clone the repository
 
-```
-$ git clone https://github.com/routemaster/routemaster-backend.git
-```
+    $ git clone https://github.com/routemaster/routemaster-backend.git
 
-3. Initialize the directory with virtualenv
+3. Initialize the repository directory with virtualenv
 
-```
-$ virtualenv routemaster-backend
-```
+    $ virtualenv routemaster-backend
 
-4. Install Flask and PyMongo
+4. Install the needed packages
 
-```
-$ cd routemaster-backend/
-$ bin/pip install flask
-$ bin/pip install pymongo
-```
+    $ cd routemaster-backend/
+    $ bin/pip install -r requirements.txt
 
-3. Run the server with `python server.py`
+3. Run the server
+
+    $ bin/python server.py
+
+4. With the server running, you can run the tests
+
+    $ bin/python tests.py
 
 Project Scope
 -------------
