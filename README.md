@@ -25,11 +25,12 @@ Building the Project
 This isn't going to work well on Windows...
 
 1. Install Python 2.7 and virtualenv
+
 2. Clone the repository
 
     $ git clone https://github.com/routemaster/routemaster-backend.git
 
-3. Initialize the repo directory with virtualenv
+3. Initialize the repository directory with virtualenv
 
     $ virtualenv routemaster-backend
 
@@ -38,7 +39,13 @@ This isn't going to work well on Windows...
     $ cd routemaster-backend/
     $ bin/pip install -r requirements.txt
 
-3. Run the server with `python server.py`
+3. Run the server
+
+    $ bin/python server.py
+
+4. With the server running, you can run the tests
+
+    $ bin/python tests.py
 
 Project Scope
 -------------
