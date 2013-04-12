@@ -61,6 +61,12 @@ class Session(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     time = Column(DateTime, default=datetime.now)
 
+class Friendship(Base):
+    __tablename__ = 'friendships'
+    id = Column(Integer, primary_key=True)
+    friender_id = Column(Integer, ForeignKey('users.id'))
+    friendee_id = Column(Integer, ForeignKey('users.id'))
+
 # Open the database using a RELATIVE path (an absolute path really does need
 # four slashes there)
 engine = create_engine('sqlite:///{}'.format(DATABASE))

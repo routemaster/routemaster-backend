@@ -8,8 +8,8 @@ from time import mktime
 from dateutil.parser import parse as parse_date
 from flask import abort, Flask, g, request
 
-from database import (PopularPath, Route, Session, SQLAlchemySession, User,
-                      Waypoint)
+from database import (Friendship, PopularPath, Route, Session,
+                      SQLAlchemySession, User, Waypoint)
 
 def paginate(query, page):
     return query.offset(page*30).limit(30)
@@ -56,9 +56,17 @@ def get_user_top_routes(uid, page):
 
 @app.route('/user/<int:uid>/friends/')
 def get_user_friends(uid):
-    # TODO: add friend relationships to db
-    friends = "uhh....."
+    friends = g.db.query(Friendship).filter_by(friendee_id=uid).all()
     return to_json(friends)
+
+@app.route('/user/<int:uid>/friend/<friendee_id>/', methods=['POST'])
+def add_friendship(uid, friendee_id):
+    # User <uid> does this in order to give user <friendee_id> access to
+    # user <uid>'s data.
+    friendship = Friendship(friender_id=uid, friendee_id=friendee_id)
+    g.db.add(friendship)
+    g.db.commit()
+    return to_json(friendship)
 
 @app.route('/route/<int:rid>/')
 def get_route(rid):

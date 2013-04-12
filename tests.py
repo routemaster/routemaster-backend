@@ -60,6 +60,20 @@ class RoutemasterTestCase(unittest.TestCase):
         assert '43' in r.text
         assert 'newPoint' in r.text
 
+    def test_add_friendship(self):
+        # Add some users
+        colin = {'name': 'Colin Chan'}
+        ben = {'name': 'Benjamin Woodruff'}
+        colin_id = requests.post(SERVER+'/user/', data=colin).json()['id']
+        ben_id = requests.post(SERVER+'/user/', data=ben).json()['id']
+        # Colin adds Ben as a friend!
+        r = requests.post(SERVER+'/user/{}/friend/{}/'.format(colin_id,
+                                                              ben_id))
+        assert r.status_code == 200
+        friendship = r.json()
+        assert friendship['friender_id'] == colin_id
+        assert friendship['friendee_id'] == ben_id
+
 if __name__ == '__main__':
     results = unittest.main(exit=False).result
     if len(results.errors) == results.testsRun:
