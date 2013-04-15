@@ -14,14 +14,21 @@ from database import (Friendship, PopularPath, Route, Session,
 def paginate(query, page):
     return query.offset(page*30).limit(30)
 
-def to_json(obj):
-    data = {}
-    for column in obj.__table__.columns:
-        value = getattr(obj, column.name)
-        if isinstance(value, (date, datetime)):
-            value = mktime(value.timetuple())
-        data[column.name] = value
-    return json.dumps(data)
+def to_json(objects):
+    not_a_list = False
+    if not isinstance(objects, list):
+        not_a_list = True
+        objects = [objects]
+    data = []
+    for obj in objects:
+        obj_dict = {}
+        for column in obj.__table__.columns:
+            value = getattr(obj, column.name)
+            if isinstance(value, (date, datetime)):
+                value = mktime(value.timetuple())
+            obj_dict[column.name] = value
+        data.append(obj_dict)
+    return json.dumps(data[0] if not_a_list else data)
 
 # Initialize Flask
 app = Flask(__name__)
