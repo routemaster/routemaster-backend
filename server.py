@@ -63,8 +63,9 @@ def get_user_top_routes(uid, page):
 
 @app.route('/user/<int:uid>/friends/')
 def get_user_friends(uid):
-    friends = (g.db.query(Friendship, User).filter(Friendship.friendee_id==uid)
-               .filter(Friendship.friender_id==User.id).all())
+    query = (g.db.query(Friendship, User).filter(Friendship.friendee_id==uid)
+             .filter(Friendship.friender_id==User.id).all())
+    friends = [user for friendship, user in query.all()]
     return to_json(friends)
 
 @app.route('/user/<int:uid>/friend/<friendee_id>/', methods=['POST'])
