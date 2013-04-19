@@ -11,17 +11,21 @@ from flask import abort, Flask, g, request
 from database import (Friendship, PopularPath, Route, Session,
                       SQLAlchemySession, User, Waypoint)
 
-def paginate(query, page):
-    return query.offset(page*30).limit(30)
-
-def to_json(obj):
-    data = {}
-    for column in obj.__table__.columns:
-        value = getattr(obj, column.name)
-        if isinstance(value, (date, datetime)):
-            value = mktime(value.timetuple())
-        data[column.name] = value
-    return json.dumps(data)
+def to_json(objects):
+    not_a_list = False
+    if not isinstance(objects, list):
+        not_a_list = True
+        objects = [objects]
+    data = []
+    for obj in objects:
+        obj_dict = {}
+        for column in obj.__table__.columns:
+            value = getattr(obj, column.name)
+            if isinstance(value, (date, datetime)):
+                value = mktime(value.timetuple())
+            obj_dict[column.name] = value
+        data.append(obj_dict)
+    return json.dumps(data[0] if not_a_list else data)
 
 # Initialize Flask
 app = Flask(__name__)
@@ -42,21 +46,21 @@ def get_user(id):
     else:
         abort(404)
 
-@app.route('/user/<int:uid>/recent/<int:page>/')
-def get_user_recent_routes(uid, page):
+@app.route('/user/<int:uid>/recent/')
+def get_user_recent_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.date)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/user/<int:uid>/top/<int:page>/')
-def get_user_top_routes(uid, page):
+@app.route('/user/<int:uid>/top/')
+def get_user_top_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.efficiency)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
 @app.route('/user/<int:uid>/friends/')
 def get_user_friends(uid):
-    friends = g.db.query(Friendship).filter_by(friendee_id=uid).all()
+    query = (g.db.query(Friendship, User).filter(Friendship.friendee_id==uid)
+             .filter(Friendship.friender_id==User.id))
+    friends = [user for friendship, user in query.all()]
     return to_json(friends)
 
 @app.route('/user/<int:uid>/friend/<friendee_id>/', methods=['POST'])
@@ -73,6 +77,14 @@ def get_route(rid):
     route = g.db.query(Route).filter_by(id=rid).first()
     if route:
         return to_json(route)
+    else:
+        abort(404)
+
+@app.route('/route/<int:rid>/waypoints/')
+def get_route_waypoints(rid):
+    route = g.db.query(Route).filter_by(id=rid).first()
+    if route:
+        return to_json(route.waypoints)
     else:
         abort(404)
 
@@ -98,28 +110,25 @@ def get_popularpath(pid):
     else:
         abort(404)
 
-@app.route('/popularpath/<int:pid>/top/<int:page>/')
+@app.route('/popularpath/<int:pid>/top/')
 def get_popularpath_top_routes(pid):
     query = (g.db.query(Route).filter_by(popularpath_id=pid)
                               .order_by(Route.efficiency))
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/leaders/efficiency/<int:page>/')
-def get_top_routes_efficiency(page):
+@app.route('/leaders/efficiency/')
+def get_top_routes_efficiency():
     query = g.db.query(Route).order_by(Route.efficiency)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/leaders/exploration/<int:page>/')
-def get_top_routes_exploration(page):
+@app.route('/leaders/exploration/')
+def get_top_routes_exploration():
     query = g.db.query(Route).order_by(Route.exploration)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
 @app.route('/user/', methods=['POST'])
 def create_user():
-    user = User(name=request.form['name'])
+    user = User(name=request.json['name'])
     g.db.add(user)
     g.db.commit()
     return to_json(user)
@@ -128,28 +137,22 @@ def create_user():
 def create_route():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    f = request.form
-    route = Route(user_id=f['user_id'], date=parse_date(f['date']),
-                  distance=f['distance'], disqualified=f['disqualified'],
-                  efficiency=f['efficiency'], time=f['time'])
+    f = request.json
+    route = Route(user_id=f['user_id'], distance=f['distance'],
+                  disqualified=f['disqualified'],
+                  efficiency=f['efficiency'], time=f['time'],
+                  start_name=f['start_name'], end_name=f['end_name'])
     if 'popularpath_id' in f:
         route.popularpath_id = f['popularpath_id']
     g.db.add(route)
     g.db.commit()
-    return to_json(route)
-
-@app.route('/waypoint/', methods=['POST'])
-def create_waypoint():
-    # Probably we should only do this with a valid session? How are we keeping
-    # track of sessions? Cookies?
-    f = request.form
-    waypoint = Waypoint(user_id=f['user_id'], route_id=f['route_id'],
-                        name=f['name'], date=parse_date(f['date']),
-                        accuracy=f['accuracy'], latitude=f['latitude'],
-                        longitude=f['longitude'])
-    g.db.add(waypoint)
+    # Create waypoints
+    for w in f['waypoints']:
+        waypoint = Waypoint(route_id=route.id, accuracy=w['accuracy'],
+                            latitude=w['latitude'], longitude=w['longitude'])
+        g.db.add(waypoint)
     g.db.commit()
-    return to_json(waypoint)
+    return to_json(route)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
