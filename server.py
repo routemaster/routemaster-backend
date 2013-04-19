@@ -128,7 +128,7 @@ def get_top_routes_exploration():
 
 @app.route('/user/', methods=['POST'])
 def create_user():
-    user = User(name=request.form['name'])
+    user = User(name=request.json['name'])
     g.db.add(user)
     g.db.commit()
     return to_json(user)
@@ -137,10 +137,11 @@ def create_user():
 def create_route():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    f = request.form
-    route = Route(user_id=f['user_id'], date=parse_date(f['date']),
-                  distance=f['distance'], disqualified=f['disqualified'],
-                  efficiency=f['efficiency'], time=f['time'])
+    f = request.json
+    route = Route(user_id=f['user_id'], distance=f['distance'],
+                  disqualified=f['disqualified'],
+                  efficiency=f['efficiency'], time=f['time'],
+                  start_name=f['start_name'], end_name=f['end_name'])
     if 'popularpath_id' in f:
         route.popularpath_id = f['popularpath_id']
     g.db.add(route)
@@ -151,11 +152,9 @@ def create_route():
 def create_waypoint():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
-    f = request.form
-    waypoint = Waypoint(user_id=f['user_id'], route_id=f['route_id'],
-                        name=f['name'], date=parse_date(f['date']),
-                        accuracy=f['accuracy'], latitude=f['latitude'],
-                        longitude=f['longitude'])
+    f = request.json
+    waypoint = Waypoint(route_id=f['route_id'], accuracy=f['accuracy'],
+                        latitude=f['latitude'], longitude=f['longitude'])
     g.db.add(waypoint)
     g.db.commit()
     return to_json(waypoint)
