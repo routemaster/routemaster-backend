@@ -27,23 +27,22 @@ class Route(Base):
     __tablename__ = 'routes'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    popularpath_id = Column(Integer, ForeignKey('popularpaths.id'))
-    date = Column(Date)
-    start_id = Column(Integer, ForeignKey('waypoints.id'))
-    end_id = Column(Integer, ForeignKey('waypoints.id'))
+    popularpath_id = Column(Integer, ForeignKey('popularpaths.id'),
+                            nullable=True)
+    date = Column(Date, default=date.today)
     distance = Column(Integer)
-    disqualified = Column(Boolean)
+    disqualified = Column(Boolean, default=False)
     efficiency = Column(Integer)
     time = Column(Integer)
+    start_name = Column(String)
+    end_name = Column(String)
+    waypoints = relationship('Waypoint', order_by='Waypoint.id',
+                             backref='route')
 
 class Waypoint(Base):
     __tablename__ = 'waypoints'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    route_id = Column(Integer, ForeignKey('waypoint.route_id', 'routes.id',
-                                          use_alter=True))
-    name = Column(String)
-    date = Column(Date)
+    route_id = Column(Integer, ForeignKey('routes.id'))
     accuracy = Column(Float)
     latitude = Column(Float)
     longitude = Column(Float)
@@ -51,8 +50,8 @@ class Waypoint(Base):
 class PopularPath(Base):
     __tablename__ = 'popularpaths'
     id = Column(Integer, primary_key=True)
-    start_id = Column(Integer, ForeignKey('waypoints.id'))
-    end_id = Column(Integer, ForeignKey('waypoints.id'))
+    start_name = Column(String)
+    end_name = Column(String)
     routes = relationship('Route', backref='popular_path')
 
 class Session(Base):
