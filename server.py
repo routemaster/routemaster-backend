@@ -6,10 +6,13 @@ import os.path
 from time import mktime
 
 from dateutil.parser import parse as parse_date
-from flask import abort, Flask, g, request
+from flask import abort, Flask, g, redirect, request
+from werkzeug import SharedDataMiddleware
 
 from database import (Friendship, PopularPath, Route, Session,
                       SQLAlchemySession, User, Waypoint)
+
+FRONTEND_BIN_DIR = '../frontend/bin'
 
 def to_json(objects):
     not_a_list = False
@@ -36,7 +39,7 @@ def before_request():
 
 @app.route('/')
 def hello():
-    return "Hello World!"
+    return redirect('/index.html')
 
 @app.route('/user/<int:id>/')
 def get_user(id):
@@ -155,4 +158,6 @@ def create_route():
     return to_json(route)
 
 if __name__ == '__main__':
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+        '/': os.path.join(os.path.dirname(__file__), FRONTEND_BIN_DIR)})
     app.run(host='0.0.0.0', port=8000, debug=True)
