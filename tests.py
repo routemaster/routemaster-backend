@@ -9,10 +9,6 @@ JSON_HEADER = {'content-type': 'application/json'}
 
 class RoutemasterTestCase(unittest.TestCase):
 
-    def test_hello_world(self):
-        r = requests.get(SERVER+'/')
-        assert r.text == 'Hello World!'
-
     def test_add_user(self):
         # We're going to add a user to the database!
         colin = dumps({'name': 'Colin Chan'})
