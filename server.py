@@ -158,6 +158,7 @@ def create_route():
     return to_json(route)
 
 if __name__ == '__main__':
-    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-        '/': os.path.join(os.path.dirname(__file__), FRONTEND_BIN_DIR)})
+    files_dir = os.path.join(os.path.dirname(__file__), FRONTEND_BIN_DIR)
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, { '/': files_dir},
+                                        cache=False)
     app.run(host='0.0.0.0', port=8000, debug=True)
