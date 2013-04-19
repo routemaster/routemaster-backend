@@ -146,18 +146,13 @@ def create_route():
         route.popularpath_id = f['popularpath_id']
     g.db.add(route)
     g.db.commit()
-    return to_json(route)
-
-@app.route('/waypoint/', methods=['POST'])
-def create_waypoint():
-    # Probably we should only do this with a valid session? How are we keeping
-    # track of sessions? Cookies?
-    f = request.json
-    waypoint = Waypoint(route_id=f['route_id'], accuracy=f['accuracy'],
-                        latitude=f['latitude'], longitude=f['longitude'])
-    g.db.add(waypoint)
+    # Create waypoints
+    for w in f['waypoints']:
+        waypoint = Waypoint(route_id=route.id, accuracy=w['accuracy'],
+                            latitude=w['latitude'], longitude=w['longitude'])
+        g.db.add(waypoint)
     g.db.commit()
-    return to_json(waypoint)
+    return to_json(route)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

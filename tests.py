@@ -36,10 +36,13 @@ class RoutemasterTestCase(unittest.TestCase):
         r = requests.post(SERVER+'/user/', data=colin, headers=JSON_HEADER)
         colin_id = r.json()['id']
         # Add a route
+        waypoints = [{'accuracy': 43, 'latitude': 50.23, 'longitude': 23.45},
+                     {'accuracy': 40, 'latitude': 60.23, 'longitude': 23.45},
+                     {'accuracy': 41, 'latitude': 70.23, 'longitude': 23.45}]
         route = dumps({'user_id': colin_id, 'date': date.today().isoformat(),
                        'distance': 100, 'disqualified': 0, 'efficiency': 50,
                        'time': 305, 'start_name': 'Epcot',
-                       'end_name': 'the beach'})
+                       'end_name': 'the beach', 'waypoints': waypoints})
         r = requests.post(SERVER+'/route/', data=route, headers=JSON_HEADER)
         assert r.status_code == 200
         # Do some spot checks to make sure the server returns the right stuff
@@ -49,17 +52,11 @@ class RoutemasterTestCase(unittest.TestCase):
         r = requests.get(SERVER+'/route/{}/'.format(route['id']))
         assert r.status_code == 200
         assert '305' in r.text
-        # Next, add a waypoint
-        point = dumps({'accuracy': 43, 'latitude': 50.23, 'longitude': 23.45,
-                       'route_id': route['id']})
-        r = requests.post(SERVER+'/waypoint/', data=point, headers=JSON_HEADER)
-        assert r.status_code == 200
-        # More spot checks
-        point = r.json()
-        assert point['latitude'] == 50.23
-        r = requests.get(SERVER+'/waypoint/{}/'.format(point['id']))
-        assert r.status_code == 200
-        assert '43' in r.text
+        r = requests.get(SERVER+'/route/{}/waypoints/'.format(route['id']))
+        assert '50.23' in r.text
+        assert '60.23' in r.text
+        waypoints = r.json()
+        assert len(waypoints) == 3
 
     def test_add_friendship(self):
         # Add some users
