@@ -11,9 +11,6 @@ from flask import abort, Flask, g, request
 from database import (Friendship, PopularPath, Route, Session,
                       SQLAlchemySession, User, Waypoint)
 
-def paginate(query, page):
-    return query.offset(page*30).limit(30)
-
 def to_json(objects):
     not_a_list = False
     if not isinstance(objects, list):
@@ -49,17 +46,15 @@ def get_user(id):
     else:
         abort(404)
 
-@app.route('/user/<int:uid>/recent/<int:page>/')
-def get_user_recent_routes(uid, page):
+@app.route('/user/<int:uid>/recent/')
+def get_user_recent_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.date)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/user/<int:uid>/top/<int:page>/')
-def get_user_top_routes(uid, page):
+@app.route('/user/<int:uid>/top/')
+def get_user_top_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.efficiency)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
 @app.route('/user/<int:uid>/friends/')
 def get_user_friends(uid):
@@ -115,24 +110,21 @@ def get_popularpath(pid):
     else:
         abort(404)
 
-@app.route('/popularpath/<int:pid>/top/<int:page>/')
+@app.route('/popularpath/<int:pid>/top/')
 def get_popularpath_top_routes(pid):
     query = (g.db.query(Route).filter_by(popularpath_id=pid)
                               .order_by(Route.efficiency))
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/leaders/efficiency/<int:page>/')
-def get_top_routes_efficiency(page):
+@app.route('/leaders/efficiency/')
+def get_top_routes_efficiency():
     query = g.db.query(Route).order_by(Route.efficiency)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
-@app.route('/leaders/exploration/<int:page>/')
-def get_top_routes_exploration(page):
+@app.route('/leaders/exploration/')
+def get_top_routes_exploration():
     query = g.db.query(Route).order_by(Route.exploration)
-    routes = paginate(query, page).all()
-    return to_json(routes)
+    return to_json(query.all())
 
 @app.route('/user/', methods=['POST'])
 def create_user():
