@@ -85,6 +85,14 @@ def get_route(rid):
     else:
         abort(404)
 
+@app.route('/route/<int:rid>/waypoints/')
+def get_route_waypoints(rid):
+    route = g.db.query(Route).filter_by(id=rid).first()
+    if route:
+        return to_json(route.waypoints)
+    else:
+        abort(404)
+
 @app.route('/waypoint/<int:wid>/')
 def get_waypoint(wid):
     waypoint = g.db.query(Waypoint).filter_by(id=wid).first()
