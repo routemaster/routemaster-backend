@@ -6,7 +6,7 @@ import os.path
 from time import mktime
 
 from dateutil.parser import parse as parse_date
-from flask import abort, Flask, g, redirect, request
+from flask import abort, Flask, g, make_response, redirect, request
 from werkzeug import SharedDataMiddleware
 
 from database import (Friendship, PopularPath, Route, Session,
@@ -17,6 +17,11 @@ FRONTEND_BIN_DIR = '../frontend/bin'
 def camel(s):
     return ''.join(b.upper() if a == '_' else b for a, b in zip(' '+s, s)
                    if b != '_')
+
+def json_response(json):
+    response = make_response(json)
+    response.headers['content-type'] = 'application/json'
+    return response
 
 def to_json(objects):
     not_a_list = False
@@ -32,7 +37,7 @@ def to_json(objects):
                 value = mktime(value.timetuple())
             obj_dict[camel(column.name)] = value
         data.append(obj_dict)
-    return json.dumps(data[0] if not_a_list else data)
+    return json.dumps(data[0] if not_a_list else data, indent=2)
 
 # Initialize Flask
 app = Flask(__name__)
@@ -49,26 +54,26 @@ def hello():
 def get_user(id):
     user = g.db.query(User).filter_by(id=id).first()
     if user:
-        return to_json(user)
+        return json_response(to_json(user))
     else:
         abort(404)
 
 @app.route('/user/<int:uid>/recent/')
 def get_user_recent_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.date)
-    return to_json(query.all())
+    return json_response(to_json(query.all()))
 
 @app.route('/user/<int:uid>/top/')
 def get_user_top_routes(uid):
     query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.efficiency)
-    return to_json(query.all())
+    return json_response(to_json(query.all()))
 
 @app.route('/user/<int:uid>/friends/')
 def get_user_friends(uid):
     query = (g.db.query(Friendship, User).filter(Friendship.friendee_id==uid)
              .filter(Friendship.friender_id==User.id))
     friends = [user for friendship, user in query.all()]
-    return to_json(friends)
+    return json_response(to_json(friends))
 
 @app.route('/user/<int:uid>/friend/<friendee_id>/', methods=['POST'])
 def add_friendship(uid, friendee_id):
@@ -77,13 +82,13 @@ def add_friendship(uid, friendee_id):
     friendship = Friendship(friender_id=uid, friendee_id=friendee_id)
     g.db.add(friendship)
     g.db.commit()
-    return to_json(friendship)
+    return json_response(to_json(friendship))
 
 @app.route('/route/<int:rid>/')
 def get_route(rid):
     route = g.db.query(Route).filter_by(id=rid).first()
     if route:
-        return to_json(route)
+        return json_response(to_json(route))
     else:
         abort(404)
 
@@ -91,7 +96,7 @@ def get_route(rid):
 def get_route_waypoints(rid):
     route = g.db.query(Route).filter_by(id=rid).first()
     if route:
-        return to_json(route.waypoints)
+        return json_response(to_json(route.waypoints))
     else:
         abort(404)
 
@@ -99,7 +104,7 @@ def get_route_waypoints(rid):
 def get_waypoint(wid):
     waypoint = g.db.query(Waypoint).filter_by(id=wid).first()
     if waypoint:
-        return to_json(waypoint)
+        return json_response(to_json(waypoint))
     else:
         abort(404)
 
@@ -113,7 +118,7 @@ def get_nearby_waypoints(coordinates):
 def get_popularpath(pid):
     popularpath = g.db.query(PopularPath).filter_by(id=pid).first()
     if popularpath:
-        return to_json(popularpath)
+        return json_response(to_json(popularpath))
     else:
         abort(404)
 
@@ -121,24 +126,24 @@ def get_popularpath(pid):
 def get_popularpath_top_routes(pid):
     query = (g.db.query(Route).filter_by(popularpath_id=pid)
                               .order_by(Route.efficiency))
-    return to_json(query.all())
+    return json_response(to_json(query.all()))
 
 @app.route('/leaders/efficiency/')
 def get_top_routes_efficiency():
     query = g.db.query(Route).order_by(Route.efficiency)
-    return to_json(query.all())
+    return json_response(to_json(query.all()))
 
 @app.route('/leaders/exploration/')
 def get_top_routes_exploration():
     query = g.db.query(Route).order_by(Route.exploration)
-    return to_json(query.all())
+    return json_response(to_json(query.all()))
 
 @app.route('/user/', methods=['POST'])
 def create_user():
     user = User(name=request.json['name'])
     g.db.add(user)
     g.db.commit()
-    return to_json(user)
+    return json_response(to_json(user))
 
 @app.route('/route/', methods=['POST'])
 def create_route():
@@ -159,7 +164,7 @@ def create_route():
                             latitude=w['latitude'], longitude=w['longitude'])
         g.db.add(waypoint)
     g.db.commit()
-    return to_json(route)
+    return json_response(to_json(route))
 
 if __name__ == '__main__':
     files_dir = os.path.join(os.path.dirname(__file__), FRONTEND_BIN_DIR)

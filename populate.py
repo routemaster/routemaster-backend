@@ -29,9 +29,12 @@ db.add_all([colin_ben, colin_ron, colin_mitt, colin_al, colin_john, ben_colin,
 db.commit()
 
 # Add some routes
-colin_r1 = Route(user_id=colin.id, distance=11, efficiency=81, time=201)
-colin_r2 = Route(user_id=colin.id, distance=31, efficiency=91, time=2201)
-colin_r3 = Route(user_id=colin.id, distance=553, efficiency=31, time=10201)
+colin_r1 = Route(user_id=colin.id, distance=11, efficiency=81, time=201,
+                 start_name='CISE', end_name='Reitz')
+colin_r2 = Route(user_id=colin.id, distance=31, efficiency=91, time=2201,
+                 start_name='CISE', end_name='Library West')
+colin_r3 = Route(user_id=colin.id, distance=553, efficiency=31, time=10201,
+                 start_name='CISE', end_name='Little Hall')
 db.add_all([colin_r1, colin_r2, colin_r3])
 db.commit()
 
