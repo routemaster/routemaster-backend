@@ -14,6 +14,10 @@ from database import (Friendship, PopularPath, Route, Session,
 
 FRONTEND_BIN_DIR = '../frontend/bin'
 
+def camel(s):
+    return ''.join(b.upper() if a == '_' else b for a, b in zip(' '+s, s)
+                   if b != '_')
+
 def to_json(objects):
     not_a_list = False
     if not isinstance(objects, list):
@@ -26,7 +30,7 @@ def to_json(objects):
             value = getattr(obj, column.name)
             if isinstance(value, (date, datetime)):
                 value = mktime(value.timetuple())
-            obj_dict[column.name] = value
+            obj_dict[camel(column.name)] = value
         data.append(obj_dict)
     return json.dumps(data[0] if not_a_list else data)
 
@@ -141,12 +145,12 @@ def create_route():
     # Probably we should only do this with a valid session? How are we keeping
     # track of sessions? Cookies?
     f = request.json
-    route = Route(user_id=f['user_id'], distance=f['distance'],
+    route = Route(user_id=f['userId'], distance=f['distance'],
                   disqualified=f['disqualified'],
                   efficiency=f['efficiency'], time=f['time'],
-                  start_name=f['start_name'], end_name=f['end_name'])
-    if 'popularpath_id' in f:
-        route.popularpath_id = f['popularpath_id']
+                  start_name=f['startName'], end_name=f['endName'])
+    if 'popularpathId' in f:
+        route.popularpath_id = f['popularpathId']
     g.db.add(route)
     g.db.commit()
     # Create waypoints
