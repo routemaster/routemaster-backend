@@ -35,10 +35,10 @@ class RoutemasterTestCase(unittest.TestCase):
         waypoints = [{'accuracy': 43, 'latitude': 50.23, 'longitude': 23.45},
                      {'accuracy': 40, 'latitude': 60.23, 'longitude': 23.45},
                      {'accuracy': 41, 'latitude': 70.23, 'longitude': 23.45}]
-        route = dumps({'user_id': colin_id, 'date': date.today().isoformat(),
+        route = dumps({'userId': colin_id, 'date': date.today().isoformat(),
                        'distance': 100, 'disqualified': 0, 'efficiency': 50,
-                       'time': 305, 'start_name': 'Epcot',
-                       'end_name': 'the beach', 'waypoints': waypoints})
+                       'time': 305, 'startName': 'Epcot',
+                       'endName': 'the beach', 'waypoints': waypoints})
         r = requests.post(SERVER+'/route/', data=route, headers=JSON_HEADER)
         assert r.status_code == 200
         # Do some spot checks to make sure the server returns the right stuff
@@ -67,8 +67,8 @@ class RoutemasterTestCase(unittest.TestCase):
                                                               ben_id))
         assert r.status_code == 200
         friendship = r.json()
-        assert friendship['friender_id'] == colin_id
-        assert friendship['friendee_id'] == ben_id
+        assert friendship['frienderId'] == colin_id
+        assert friendship['friendeeId'] == ben_id
 
 if __name__ == '__main__':
     results = unittest.main(exit=False).result
