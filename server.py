@@ -160,7 +160,7 @@ def create_route():
     g.db.commit()
     # Create waypoints
     for w in f['waypoints']:
-        waypoint = Waypoint(route_id=route.id, accuracy=w['accuracy'],
+        waypoint = Waypoint(route_id=route.id,
                             latitude=w['latitude'], longitude=w['longitude'])
         g.db.add(waypoint)
     g.db.commit()
