@@ -5,6 +5,7 @@ import json
 import os.path
 
 from flask import abort, Flask, g, make_response, redirect, request
+from sqlalchemy import desc
 from werkzeug import SharedDataMiddleware
 
 from database import (Friendship, PopularPath, Route, Session,
@@ -58,7 +59,7 @@ def get_user(id):
 
 @app.route('/user/<int:uid>/recent/')
 def get_user_recent_routes(uid):
-    query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.date)
+    query = g.db.query(Route).filter_by(user_id=uid).order_by(desc(Route.id))
     return json_response(to_json(query.all()))
 
 @app.route('/user/<int:uid>/top/')
