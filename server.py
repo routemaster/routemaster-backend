@@ -3,9 +3,7 @@ from __future__ import absolute_import, division
 from datetime import date, datetime
 import json
 import os.path
-from time import mktime
 
-from dateutil.parser import parse as parse_date
 from flask import abort, Flask, g, make_response, redirect, request
 from werkzeug import SharedDataMiddleware
 
@@ -34,7 +32,7 @@ def to_json(objects):
         for column in obj.__table__.columns:
             value = getattr(obj, column.name)
             if isinstance(value, (date, datetime)):
-                value = mktime(value.timetuple())
+                value = value.isoformat()
             obj_dict[camel(column.name)] = value
         data.append(obj_dict)
     return json.dumps(data[0] if not_a_list else data, indent=2)
