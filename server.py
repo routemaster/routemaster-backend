@@ -3,10 +3,9 @@ from __future__ import absolute_import, division
 from datetime import date, datetime
 import json
 import os.path
-from time import mktime
 
-from dateutil.parser import parse as parse_date
 from flask import abort, Flask, g, make_response, redirect, request
+from sqlalchemy import desc
 from werkzeug import SharedDataMiddleware
 
 from database import (Friendship, PopularPath, Route, Session,
@@ -34,7 +33,7 @@ def to_json(objects):
         for column in obj.__table__.columns:
             value = getattr(obj, column.name)
             if isinstance(value, (date, datetime)):
-                value = mktime(value.timetuple())
+                value = value.isoformat()
             obj_dict[camel(column.name)] = value
         data.append(obj_dict)
     return json.dumps(data[0] if not_a_list else data, indent=2)
@@ -60,7 +59,7 @@ def get_user(id):
 
 @app.route('/user/<int:uid>/recent/')
 def get_user_recent_routes(uid):
-    query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.date)
+    query = g.db.query(Route).filter_by(user_id=uid).order_by(desc(Route.id))
     return json_response(to_json(query.all()))
 
 @app.route('/user/<int:uid>/top/')
