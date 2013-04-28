@@ -109,9 +109,21 @@ def get_waypoint(wid):
 
 @app.route('/waypoint/near/<coordinates>/')
 def get_nearby_waypoints(coordinates):
-    latitude, longitude = coordinates.split(',')
-    # TODO: Query the database for nearby points
-    return "This doesn't work yet."
+    latitude, longitude = map(float, coordinates.split(','))
+    # Warning: The following code is not efficient. Avoid staring at it for
+    # prolonged periods of time.
+    routes = g.db.query(Route).all()
+    named_waypoints = []
+    for route in routes:
+        start = route.waypoints[0]
+        end = route.waypoints[-1]
+        named_waypoints.append(((abs(start.latitude - latitude) +
+                                 abs(start.longitude - longitude)),
+                                route.start_name))
+        named_waypoints.append(((abs(end.latitude - latitude) +
+                                 abs(end.longitude - longitude)),
+                                route.end_name))
+    return json_response(json.dumps(min(sorted(named_waypoints))[1]))
 
 @app.route('/popularpath/<int:wid>/')
 def get_popularpath(pid):
