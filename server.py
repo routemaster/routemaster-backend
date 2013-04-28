@@ -64,7 +64,8 @@ def get_user_recent_routes(uid):
 
 @app.route('/user/<int:uid>/top/')
 def get_user_top_routes(uid):
-    query = g.db.query(Route).filter_by(user_id=uid).order_by(Route.efficiency)
+    query = g.db.query(Route).filter_by(user_id=uid).order_by(
+                desc(Route.efficiency))
     return json_response(to_json(query.all()))
 
 @app.route('/user/<int:uid>/friends/')
@@ -129,7 +130,7 @@ def get_popularpath_top_routes(pid):
 
 @app.route('/leaders/efficiency/')
 def get_top_routes_efficiency():
-    query = g.db.query(Route).order_by(Route.efficiency)
+    query = g.db.query(Route).order_by(desc(Route.efficiency))
     return json_response(to_json(query.all()))
 
 @app.route('/leaders/exploration/')
