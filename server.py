@@ -150,6 +150,15 @@ def get_top_routes_exploration():
     query = g.db.query(Route).order_by(Route.exploration)
     return json_response(to_json(query.all()))
 
+@app.route('/userid/<username>/')
+def get_user_id(username):
+    user = g.db.query(User).filter_by(name=username).first()
+    if user is None:
+        user = User(name=username)
+        g.db.add(user)
+        g.db.commit()
+    return json_response(json.dumps(user.id))
+
 @app.route('/user/', methods=['POST'])
 def create_user():
     user = User(name=request.json['name'])
